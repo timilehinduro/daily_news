@@ -3,7 +3,7 @@ import Header from '@/components/ui/header';
 import Link from 'next/link';
 import React from 'react';
 
-export default function () {
+export default function News() {
   return (
     <div>
       <Header />
@@ -14,7 +14,12 @@ export default function () {
             {/* News One */}
             <article className="border-b pb-8">
               <h2 className="text-2xl font-bold mb-4">
-                Major Political Development Shapes Global Policy
+                <Link
+                  href="/text-news/major-political-development"
+                  className="hover:text-primary"
+                >
+                  Major Political Development Shapes Global Policy
+                </Link>
               </h2>
               <p className="text-muted-foreground mb-4">
                 Breaking news coverage of significant political events and their
@@ -22,7 +27,10 @@ export default function () {
                 consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
                 labore.
               </p>
-              <Link href="#" className="text-primary hover:underline">
+              <Link
+                href="/text-news/major-political-development"
+                className="text-primary hover:underline"
+              >
                 Read more
               </Link>
             </article>
@@ -30,14 +38,22 @@ export default function () {
             {/* News Two */}
             <article className="border-b pb-8">
               <h2 className="text-2xl font-bold mb-4">
-                Economic Reforms Signal Market Changes
+                <Link
+                  href="/text-news/economic-reforms"
+                  className="hover:text-primary"
+                >
+                  Economic Reforms Signal Market Changes
+                </Link>
               </h2>
               <p className="text-muted-foreground mb-4">
                 Analysis of recent economic policy changes and their potential
                 impact on global markets. Ut enim ad minim veniam, quis nostrud
                 exercitation ullamco laboris nisi ut aliquip.
               </p>
-              <Link href="#" className="text-primary hover:underline">
+              <Link
+                href="/text-news/economic-reforms"
+                className="text-primary hover:underline"
+              >
                 Read more
               </Link>
             </article>
@@ -87,8 +103,7 @@ export default function () {
               </Link>
             </article>
           </div>
-          {/* </div>
-      </main> */}
+
           {/* Sidebar */}
           <div className="space-y-8">
             {/* Advertisement Section */}
