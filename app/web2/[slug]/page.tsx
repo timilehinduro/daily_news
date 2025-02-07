@@ -32,10 +32,11 @@ const getArticle = (slug: string) => {
 
         Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
       `,
-      author: 'John Smith',
+      author: 'Daily News AI',
       date: '2025-02-05',
       category: 'Politics',
-      image: 'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
+      image:
+        'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
     },
     'economic-reforms': {
       title: 'Economic Reforms Signal Market Changes',
@@ -61,10 +62,11 @@ const getArticle = (slug: string) => {
 
         Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
       `,
-      author: 'Jane Doe',
+      author: 'Daily News AI',
       date: '2025-02-04',
       category: 'Economy',
-      image: 'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
+      image:
+        'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
     },
     // Add more articles as needed
   };

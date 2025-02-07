@@ -1,6 +1,6 @@
 import GenFooter from '@/components/ui/footer';
 import Header from '@/components/ui/header';
-import { InfoIcon } from 'lucide-react';
+import InfoSec from '@/components/ui/info';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 
@@ -114,15 +114,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
                 &larr; Back to News
               </Link>
             </div>
-            <div className="flex bg-gray-100 rounded-lg p-4 mb-4 mt-10">
-              <InfoIcon />
-              <p className="ml-3 text-sm text-gray-700">
-                <span className="font-medium">Algorithmic function</span>{' '}
-                Sentiment Analysis Using NLP (Text Classification) This function
-                uses a pre-trained AI model (VADER from nltk) to determine the
-                sentiment of a given text.
-              </p>
-            </div>
+            <InfoSec />
           </article>
 
           {/* Sidebar */}

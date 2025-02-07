@@ -7,6 +7,7 @@ import { notFound } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Play, Pause, Volume2, VolumeX } from "lucide-react"
 import { useState, useEffect, useRef } from "react"
+import InfoSec from "@/components/ui/info"
 
 const getVideoArticle = (slug: string) => {
   // Mock data - in a real app, fetch from API/database
@@ -105,6 +106,7 @@ export default function VideoArticlePage({ params }: { params: { slug: string } 
                 </p>
               ))}
             </div>
+            <InfoSec />
 
             <div className="flex items-center gap-4 pt-6 border-t">
               <Link href="/video-news" className="text-primary hover:underline">

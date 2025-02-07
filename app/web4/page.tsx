@@ -1,5 +1,6 @@
 import GenFooter from '@/components/ui/footer';
 import Header from '@/components/ui/header';
+import InfoSec from '@/components/ui/info';
 import { InfoIcon } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';
@@ -35,15 +36,7 @@ export default function News() {
                 Read more
               </Link>
               {/* <Link className='pt-10' href="/ai-info"> */}
-              <div className="flex bg-gray-100 rounded-lg p-4 mb-4 mt-10">
-                <InfoIcon />
-                <p className="ml-3 text-sm text-gray-700">
-                  <span className="font-medium">Algorithmic function</span>{' '}
-                  Sentiment Analysis Using NLP (Text Classification) This
-                  function uses a pre-trained AI model (VADER from nltk) to
-                  determine the sentiment of a given text.
-                </p>
-              </div>
+              <InfoSec />
               {/* </Link> */}
             </article>
 
@@ -68,15 +61,7 @@ export default function News() {
               >
                 Read more
               </Link>
-              <div className="flex bg-gray-100 rounded-lg p-4 mb-4 mt-10">
-                <InfoIcon />
-                <p className="ml-3 text-sm text-gray-700">
-                  <span className="font-medium">Algorithmic function</span>{' '}
-                  Sentiment Analysis Using NLP (Text Classification) This
-                  function uses a pre-trained AI model (VADER from nltk) to
-                  determine the sentiment of a given text.
-                </p>
-              </div>
+              <InfoSec />
             </article>
 
             {/* News Three */}
@@ -92,15 +77,7 @@ export default function News() {
               <Link href="#" className="text-primary hover:underline">
                 Read more
               </Link>
-              <div className="flex bg-gray-100 rounded-lg p-4 mb-4 mt-10">
-                <InfoIcon />
-                <p className="ml-3 text-sm text-gray-700">
-                  <span className="font-medium">Algorithmic function</span>{' '}
-                  Sentiment Analysis Using NLP (Text Classification) This
-                  function uses a pre-trained AI model (VADER from nltk) to
-                  determine the sentiment of a given text.
-                </p>
-              </div>
+              <InfoSec />
             </article>
 
             {/* News Four */}
@@ -116,15 +93,7 @@ export default function News() {
               <Link href="#" className="text-primary hover:underline">
                 Read more
               </Link>
-              <div className="flex bg-gray-100 rounded-lg p-4 mb-4 mt-10">
-                <InfoIcon />
-                <p className="ml-3 text-sm text-gray-700">
-                  <span className="font-medium">Algorithmic function</span>{' '}
-                  Sentiment Analysis Using NLP (Text Classification) This
-                  function uses a pre-trained AI model (VADER from nltk) to
-                  determine the sentiment of a given text.
-                </p>
-              </div>
+              <InfoSec />
             </article>
 
             {/* News Five */}
@@ -140,15 +109,7 @@ export default function News() {
               <Link href="#" className="text-primary hover:underline">
                 Read more
               </Link>
-              <div className="flex bg-gray-100 rounded-lg p-4 mb-4 mt-10">
-                <InfoIcon />
-                <p className="ml-3 text-sm text-gray-700">
-                  <span className="font-medium">Algorithmic function</span>{' '}
-                  Sentiment Analysis Using NLP (Text Classification) This
-                  function uses a pre-trained AI model (VADER from nltk) to
-                  determine the sentiment of a given text.
-                </p>
-              </div>
+              <InfoSec />
             </article>
           </div>
 
