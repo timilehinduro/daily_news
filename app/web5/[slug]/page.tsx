@@ -1,9 +1,13 @@
+"use client"
 import GenFooter from '@/components/ui/footer';
 import Header from '@/components/ui/header';
 import Link from 'next/link';
 import Image from 'next/image';
 import { notFound } from 'next/navigation';
-import InfoSec from '@/components/ui/info';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
+import Modal from '@/components/ui/modal';
+// import InfoSec from '@/components/ui/info';
 
 // This would typically come from your API or CMS
 const getArticle = (slug: string) => {
@@ -80,9 +84,28 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     notFound();
   }
 
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    setIsModalOpen(true);
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <p className="mb-4">
+          Please be aware that the news articles presented on this page are
+          generated using artificial intelligence. While we strive for accuracy,
+          these articles should not be considered as traditional journalistic
+          content.
+        </p>
+        <p className="mb-4">
+          We encourage readers to verify information from multiple sources and
+          to approach the content with a critical mindset.
+        </p>
+        <Button onClick={() => setIsModalOpen(false)}>I understand</Button>
+      </Modal>
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="grid md:grid-cols-[1fr,300px] gap-8">
@@ -96,7 +119,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
                 <span>{article.category}</span>
                 <span>•</span>
                 <time dateTime={article.date}>
-                  {new Date(article.date).toLocaleDateString()}
+                  {article.date}
                 </time>
               </div>
               <h1 className="text-4xl font-bold">{article.title}</h1>
@@ -120,7 +143,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
                 </p>
               ))}
             </div>
-            <InfoSec />
+            {/* <InfoSec /> */}
 
             <div className="flex items-center gap-4 pt-6 border-t">
               <Link href="/news" className="text-primary hover:underline">

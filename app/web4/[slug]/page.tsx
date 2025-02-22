@@ -1,8 +1,12 @@
+"use client"
+import { Button } from '@/components/ui/button';
 import GenFooter from '@/components/ui/footer';
 import Header from '@/components/ui/header';
-import InfoSec from '@/components/ui/info';
+import Modal from '@/components/ui/modal';
+// import InfoSec from '@/components/ui/info';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 // const getArticle = (slug: string) => {
 //   const articles = {
@@ -50,6 +54,12 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   //   if (!article) {
   //     notFound();
   //   }
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    setIsModalOpen(true);
+  }, []);
+
   const article = {
     title: 'Major Political Development Shapes Global Policy',
     content: `
@@ -74,7 +84,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   
         Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
       `,
-    author: 'John Smith',
+    author: 'Daily News AI',
     date: '2025-02-05',
     category: 'Politics',
   };
@@ -82,6 +92,20 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <p className="mb-4">
+          Please be aware that the news articles presented on this page are
+          generated using artificial intelligence. While we strive for accuracy,
+          these articles should not be considered as traditional journalistic
+          content.
+        </p>
+        <p className="mb-4">
+          We encourage readers to verify information from multiple sources and
+          to approach the content with a critical mindset.
+        </p>
+        <Button onClick={() => setIsModalOpen(false)}>I understand</Button>
+      </Modal>
 
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="grid md:grid-cols-[1fr,300px] gap-8">
@@ -92,7 +116,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
                 <span>{article.category}</span>
                 <span>•</span>
                 <time dateTime={article.date}>
-                  {new Date(article.date).toLocaleDateString()}
+                {article.date}
                 </time>
               </div>
               <h1 className="text-4xl font-bold">{article.title}</h1>
@@ -114,7 +138,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
                 &larr; Back to News
               </Link>
             </div>
-            <InfoSec />
+            {/* <InfoSec /> */}
           </article>
 
           {/* Sidebar */}

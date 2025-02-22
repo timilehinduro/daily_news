@@ -1,19 +1,21 @@
-"use client"
+'use client';
 
-import GenFooter from "@/components/ui/footer"
-import Header from "@/components/ui/header"
-import Link from "next/link"
-import { notFound } from "next/navigation"
-import { Button } from "@/components/ui/button"
-import { Play, Pause, Volume2, VolumeX } from "lucide-react"
-import { useState, useEffect, useRef } from "react"
-import InfoSec from "@/components/ui/info"
+import GenFooter from '@/components/ui/footer';
+import Header from '@/components/ui/header';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
+import { Button } from '@/components/ui/button';
+import { Play, Pause, Volume2, VolumeX } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import InfoSec from '@/components/ui/info';
+import Modal from '@/components/ui/modal';
+import VideoPlayer from '@/components/ui/videoplayer';
 
 const getVideoArticle = (slug: string) => {
   // Mock data - in a real app, fetch from API/database
   const videoArticles = {
-    "political-summit-concludes": {
-      title: "Breaking: Major Political Summit Concludes",
+    'political-summit-concludes': {
+      title: 'Breaking: Major Political Summit Concludes',
       content: `
         World leaders have reached a landmark agreement on climate change policies at the recent global summit. Our correspondent reports from the event, highlighting key decisions and their potential impact on international environmental efforts.
 
@@ -29,14 +31,14 @@ const getVideoArticle = (slug: string) => {
 
         As the world reacts to this groundbreaking accord, economists and environmental experts are already analyzing its potential effects on global markets, energy sectors, and international relations. Stay tuned for more in-depth coverage and expert analysis on this developing story.
       `,
-      author: "Daily News AI",
-      date: "2025-02-05",
-      category: "Politics",
-      videoUrl: "https://www.youtube.com/watch?v=W5MR6Jy3SLU",
-      duration: "5:23",
+      author: 'Daily News AI',
+      date: '2025-02-05',
+      category: 'Politics',
+      videoUrl: 'https://www.youtube.com/watch?v=W5MR6Jy3SLU',
+      duration: '5:23',
     },
-    "tech-giant-unveils-ai": {
-      title: "Tech Giant Unveils Revolutionary AI",
+    'tech-giant-unveils-ai': {
+      title: 'Tech Giant Unveils Revolutionary AI',
       content: `
         In a groundbreaking announcement, Silicon Valley's leading tech company has unveiled its latest artificial intelligence system, promising to transform multiple industries. Our technology correspondent brings you an exclusive look at this cutting-edge AI and its potential applications.
 
@@ -54,31 +56,56 @@ const getVideoArticle = (slug: string) => {
 
         As we continue to explore the implications of this revolutionary AI, we'll be speaking with ethicists, industry leaders, and policymakers to understand how Nexus might shape our future. Stay tuned for ongoing coverage of this developing story.
       `,
-      author: "Daily News AI",
-      date: "2025-02-04",
-      category: "Technology",
-      videoUrl: "https://www.youtube.com/watch?v=W5MR6Jy3SLU",
-      duration: "3:45",
+      author: 'Daily News AI',
+      date: '2025-02-04',
+      category: 'Technology',
+      videoUrl: 'https://www.youtube.com/watch?v=W5MR6Jy3SLU',
+      duration: '3:45',
     },
     // Add more video articles as needed
-  }
+  };
 
-  return videoArticles[slug as keyof typeof videoArticles] || null
-}
+  return videoArticles[slug as keyof typeof videoArticles] || null;
+};
 
-export default function VideoArticlePage({ params }: { params: { slug: string } }) {
-  const article = getVideoArticle(params.slug)
+export default function VideoArticlePage({
+  params,
+}: {
+  params: { slug: string };
+}) {
+  const article = getVideoArticle(params.slug);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    setIsModalOpen(true);
+  }, []);
+
 
   if (!article) {
-    notFound()
+    notFound();
   }
-
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
 
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <p className="mb-4">
+          Please be aware that the news articles presented on this page are
+          generated using artificial intelligence. While we strive for accuracy,
+          these articles should not be considered as traditional journalistic
+          content.
+        </p>
+        <p className="mb-4">
+          We encourage readers to verify information from multiple sources and
+          to approach the content with a critical mindset.
+        </p>
+        <Button onClick={() => setIsModalOpen(false)}>I understand</Button>
+      </Modal>
+
       <main className="flex-1 container mx-auto px-4 py-8">
-        <Link href="/video-news" className="text-primary hover:underline mb-4 inline-block">
+        <Link
+          href="/video-news"
+          className="text-primary hover:underline mb-4 inline-block"
+        >
           &larr; Back to Video News
         </Link>
 
@@ -89,7 +116,9 @@ export default function VideoArticlePage({ params }: { params: { slug: string } 
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>{article.category}</span>
                 <span>•</span>
-                <time dateTime={article.date}>{new Date(article.date).toLocaleDateString()}</time>
+                <time dateTime={article.date}>
+                  {article.date}
+                </time>
               </div>
               <h1 className="text-4xl font-bold">{article.title}</h1>
               <div className="flex items-center gap-2 text-sm">
@@ -100,7 +129,7 @@ export default function VideoArticlePage({ params }: { params: { slug: string } 
             <VideoPlayer src={article.videoUrl} />
 
             <div className="prose prose-gray max-w-none">
-              {article.content.split("\n\n").map((paragraph, index) => (
+              {article.content.split('\n\n').map((paragraph, index) => (
                 <p key={index} className="mb-4">
                   {paragraph}
                 </p>
@@ -152,7 +181,9 @@ export default function VideoArticlePage({ params }: { params: { slug: string } 
                 <button className="w-full text-left text-sm text-muted-foreground hover:text-primary">
                   Share on LinkedIn
                 </button>
-                <button className="w-full text-left text-sm text-muted-foreground hover:text-primary">Copy Link</button>
+                <button className="w-full text-left text-sm text-muted-foreground hover:text-primary">
+                  Copy Link
+                </button>
               </div>
             </section>
           </div>
@@ -162,99 +193,13 @@ export default function VideoArticlePage({ params }: { params: { slug: string } 
       <div className="border-t">
         <div className="container mx-auto px-4 py-4 text-center text-sm text-muted-foreground">
           <p>Daily News - Your Source for Latest Video Updates</p>
-          <p>&copy; {new Date().getFullYear()} Daily News. All rights reserved.</p>
+          <p>
+            &copy; {new Date().getFullYear()} Daily News. All rights reserved.
+          </p>
         </div>
       </div>
 
       <GenFooter />
     </div>
-  )
+  );
 }
-
-function VideoPlayer({ src }: { src: string }) {
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isMuted, setIsMuted] = useState(false)
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const [isYouTube, setIsYouTube] = useState(false)
-  const [youtubeId, setYoutubeId] = useState("")
-
-  useEffect(() => {
-    const youtubeRegex = /^(https?:\/\/)?(www\.)?(youtube\.com|youtu\.be)\/.+/
-    if (youtubeRegex.test(src)) {
-      setIsYouTube(true)
-      const id = src.split("v=")[1] || src.split("/").pop()
-      setYoutubeId(id || "")
-    } else {
-      setIsYouTube(false)
-    }
-  }, [src])
-
-  const togglePlay = () => {
-    if (isYouTube) {
-      const iframe = document.querySelector("iframe")
-      if (iframe) {
-        const message = isPlaying
-          ? '{"event":"command","func":"pauseVideo","args":""}'
-          : '{"event":"command","func":"playVideo","args":""}'
-        iframe.contentWindow?.postMessage(message, "*")
-      }
-    } else if (videoRef.current) {
-      if (isPlaying) {
-        videoRef.current.pause()
-      } else {
-        videoRef.current.play()
-      }
-    }
-    setIsPlaying(!isPlaying)
-  }
-
-  const toggleMute = () => {
-    if (isYouTube) {
-      const iframe = document.querySelector("iframe")
-      if (iframe) {
-        const message = isMuted
-          ? '{"event":"command","func":"unMute","args":""}'
-          : '{"event":"command","func":"mute","args":""}'
-        iframe.contentWindow?.postMessage(message, "*")
-      }
-    } else if (videoRef.current) {
-      videoRef.current.muted = !isMuted
-    }
-    setIsMuted(!isMuted)
-  }
-
-  return (
-    <div className="relative">
-      {isYouTube ? (
-        <iframe
-          width="100%"
-          height="315"
-          src={`https://www.youtube.com/embed/${youtubeId}?enablejsapi=1`}
-          title="YouTube video player"
-          frameBorder="0"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          allowFullScreen
-          className="aspect-video rounded-lg"
-        ></iframe>
-      ) : (
-        <video
-          ref={videoRef}
-          src={src}
-          className="w-full aspect-video rounded-lg"
-          autoPlay={isPlaying}
-          muted={isMuted}
-          loop
-        />
-      )}
-      <div className="absolute bottom-4 left-4 right-4 flex justify-between items-center">
-        <Button variant="secondary" size="icon" onClick={togglePlay}>
-          {isPlaying ? <Pause className="h-6 w-6" /> : <Play className="h-6 w-6" />}
-        </Button>
-        <Button variant="secondary" size="icon" onClick={toggleMute}>
-          {isMuted ? <VolumeX className="h-6 w-6" /> : <Volume2 className="h-6 w-6" />}
-        </Button>
-      </div>
-    </div>
-  )
-}
-

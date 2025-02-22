@@ -1,14 +1,34 @@
+'use client';
 import GenFooter from '@/components/ui/footer';
 import Header from '@/components/ui/header';
-import InfoSec from '@/components/ui/info';
-import { InfoIcon } from 'lucide-react';
+// import InfoSec from '@/components/ui/info';
 import Link from 'next/link';
 import React from 'react';
+import Modal from '@/components/ui/modal';
+import { useEffect, useState } from 'react';
+import { Button } from '@/components/ui/button';
 
 export default function News() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  useEffect(() => {
+    setIsModalOpen(true);
+  }, []);
   return (
     <div>
       <Header />
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <p className="mb-4">
+          Please be aware that the news articles presented on this page are
+          generated using artificial intelligence. While we strive for accuracy,
+          these articles should not be considered as traditional journalistic
+          content.
+        </p>
+        <p className="mb-4">
+          We encourage readers to verify information from multiple sources and
+          to approach the content with a critical mindset.
+        </p>
+        <Button onClick={() => setIsModalOpen(false)}>I understand</Button>
+      </Modal>
       <main className="flex-1 container mx-auto px-4 py-8">
         <div className="grid md:grid-cols-[1fr,300px] gap-8">
           {/* Main Content */}
@@ -36,7 +56,7 @@ export default function News() {
                 Read more
               </Link>
               {/* <Link className='pt-10' href="/ai-info"> */}
-              <InfoSec />
+              {/* <InfoSec /> */}
               {/* </Link> */}
             </article>
 
@@ -61,7 +81,7 @@ export default function News() {
               >
                 Read more
               </Link>
-              <InfoSec />
+              {/* <InfoSec /> */}
             </article>
 
             {/* News Three */}
@@ -77,7 +97,7 @@ export default function News() {
               <Link href="#" className="text-primary hover:underline">
                 Read more
               </Link>
-              <InfoSec />
+              {/* <InfoSec /> */}
             </article>
 
             {/* News Four */}
@@ -93,7 +113,7 @@ export default function News() {
               <Link href="#" className="text-primary hover:underline">
                 Read more
               </Link>
-              <InfoSec />
+              {/* <InfoSec /> */}
             </article>
 
             {/* News Five */}
@@ -109,7 +129,7 @@ export default function News() {
               <Link href="#" className="text-primary hover:underline">
                 Read more
               </Link>
-              <InfoSec />
+              {/* <InfoSec /> */}
             </article>
           </div>
 

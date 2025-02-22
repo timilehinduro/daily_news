@@ -1,5 +1,5 @@
-import React from 'react';
 import Link from 'next/link';
+import { Facebook, Twitter, Instagram, Linkedin, Youtube } from 'lucide-react';
 
 export default function GenFooter() {
   return (
@@ -102,11 +102,59 @@ export default function GenFooter() {
             </ul>
           </div>
         </div>
-        <div className="border-t">
-          <div className="container mx-auto px-4 py-4 text-center text-sm text-muted-foreground">
-            <p>Daily News - Your Source for Latest Updates</p>
+        <div className="border-t mt-8 pt-8">
+          <div className="flex justify-center space-x-6 mb-4">
+            <Link
+              href="https://facebook.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-primary"
+            >
+              <Facebook size={24} />
+              <span className="sr-only">Facebook</span>
+            </Link>
+            <Link
+              href="https://twitter.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-primary"
+            >
+              <Twitter size={24} />
+              <span className="sr-only">Twitter</span>
+            </Link>
+            <Link
+              href="https://instagram.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-primary"
+            >
+              <Instagram size={24} />
+              <span className="sr-only">Instagram</span>
+            </Link>
+            <Link
+              href="https://linkedin.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-primary"
+            >
+              <Linkedin size={24} />
+              <span className="sr-only">LinkedIn</span>
+            </Link>
+            <Link
+              href="https://youtube.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-gray-600 hover:text-primary"
+            >
+              <Youtube size={24} />
+              <span className="sr-only">YouTube</span>
+            </Link>
+          </div>
+          <div className="text-center text-sm text-muted-foreground">
+            <p>Daily News</p>
             <p>
-              &copy; {new Date().getFullYear()} Daily News. All rights reserved.
+              Copyright &copy; {new Date().getFullYear()} Daily News. All rights
+              reserved.
             </p>
           </div>
         </div>

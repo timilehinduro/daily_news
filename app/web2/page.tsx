@@ -10,7 +10,8 @@ const newsItems = [
     id: 1,
     title: 'Major Political Development Shapes Global Policy',
     slug: 'major-political-development',
-    image: 'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
+    image:
+      'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
     preview:
       'Breaking news coverage of significant political events and their impact on international relations. Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
     category: 'Politics',
@@ -20,7 +21,8 @@ const newsItems = [
     id: 2,
     title: 'Economic Reforms Signal Market Changes',
     slug: 'economic-reforms',
-    image: 'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
+    image:
+      'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
     preview:
       'Analysis of recent economic policy changes and their potential impact on global markets. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip.',
     category: 'Economy',
@@ -30,7 +32,8 @@ const newsItems = [
     id: 3,
     title: 'Technology Innovation Breakthrough',
     slug: 'technology-innovation',
-    image: 'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
+    image:
+      'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
     preview:
       'Latest developments in technology sector showing promising results for future applications. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore.',
     category: 'Technology',
@@ -40,7 +43,8 @@ const newsItems = [
     id: 4,
     title: 'Environmental Initiative Launches',
     slug: 'environmental-initiative',
-    image: 'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
+    image:
+      'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
     preview:
       'New global initiative aims to address climate change through collaborative effort. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia.',
     category: 'Environment',
@@ -50,7 +54,8 @@ const newsItems = [
     id: 5,
     title: 'Cultural Event Draws Global Attention',
     slug: 'cultural-event',
-    image: 'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
+    image:
+      'https://ichef.bbci.co.uk/news/1536/cpsprodpb/9f5e/live/ad1a9f90-e4c8-11ef-8a40-954a179da503.jpg.webp',
     preview:
       'International cultural festival celebrates diversity and promotes global understanding. Deserunt mollit anim id est laborum consectetur adipiscing elit.',
     category: 'Culture',
@@ -119,56 +124,61 @@ export default function NewsPage() {
             {/* Advertisement Section */}
             <section className="border rounded-lg p-4">
               <h3 className="font-bold mb-4">Advertisement</h3>
-              <div className="bg-muted aspect-video flex items-center justify-center">
+              <div className="bg-muted aspect-square flex items-center justify-center">
                 <span className="text-muted-foreground">Ad Space</span>
               </div>
             </section>
 
-            {/* Popular Stories Section */}
+            {/* More Stories Section */}
             <section className="border rounded-lg p-4">
-              <h3 className="font-bold mb-4">Popular Stories</h3>
+              <h3 className="font-bold mb-4">More Stories</h3>
               <div className="space-y-4">
-                {newsItems.slice(0, 3).map((item) => (
-                  <div key={item.id} className="flex gap-4">
-                    <Image
-                      src={item.image || '/placeholder.svg'}
-                      alt={item.title}
-                      width={100}
-                      height={75}
-                      className="rounded object-cover w-[100px] aspect-video"
-                    />
-                    <div>
-                      <h4 className="font-semibold hover:text-primary line-clamp-2">
-                        <Link href={`/web2/${item.slug}`}>{item.title}</Link>
-                      </h4>
-                      <p className="text-sm text-muted-foreground">
-                        {item.category}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                <Link href="#" className="block hover:text-primary">
+                  Healthcare Reform Bill Passes Senate Vote
+                </Link>
+                <Link href="#" className="block hover:text-primary">
+                  Space Mission Successfully Launches New Satellite
+                </Link>
+                <Link href="#" className="block hover:text-primary">
+                  Sports: Championship Finals Set for Weekend
+                </Link>
+                <Link href="#" className="block hover:text-primary">
+                  Education: New Learning Methods Show Promise
+                </Link>
+                <Link href="#" className="block hover:text-primary">
+                  Entertainment: Award Show Highlights
+                </Link>
               </div>
             </section>
 
-            {/* Categories Section */}
+            {/* Additional Details */}
             <section className="border rounded-lg p-4">
-              <h3 className="font-bold mb-4">Categories</h3>
-              <div className="space-y-2">
-                {[
-                  'Politics',
-                  'Economy',
-                  'Technology',
-                  'Environment',
-                  'Culture',
-                ].map((category) => (
-                  <Link
-                    key={category}
-                    href={`/category/${category.toLowerCase()}`}
-                    className="block text-muted-foreground hover:text-primary"
-                  >
-                    {category}
-                  </Link>
-                ))}
+              <h3 className="font-bold mb-4">Quick Links</h3>
+              <div className="space-y-2 text-sm">
+                <Link
+                  href="#"
+                  className="block text-muted-foreground hover:text-primary"
+                >
+                  Subscribe to Newsletter
+                </Link>
+                <Link
+                  href="#"
+                  className="block text-muted-foreground hover:text-primary"
+                >
+                  Download Our App
+                </Link>
+                <Link
+                  href="#"
+                  className="block text-muted-foreground hover:text-primary"
+                >
+                  Weather Updates
+                </Link>
+                <Link
+                  href="#"
+                  className="block text-muted-foreground hover:text-primary"
+                >
+                  Event Calendar
+                </Link>
               </div>
             </section>
           </div>
