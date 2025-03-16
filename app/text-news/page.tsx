@@ -2,8 +2,31 @@ import GenFooter from '@/components/ui/footer';
 import Header from '@/components/ui/header';
 import Link from 'next/link';
 import React from 'react';
+import EngagementButtons from '@/components/ui/engagement-buttons';
+import ArticleCard from '@/components/ui/article-card';
 
-export default function News() {
+// Define interface for the news data
+interface NewsItem {
+  id: number;
+  title: string;
+  content: string;
+  created_at: string;
+  likes: Array<{ id: number; created_at: string }>;
+  comments: Array<{ id: number; text: string; created_at: string }>;
+  shares: Array<{ id: number; platform: string; created_at: string }>;
+}
+
+// Make the component async
+export default async function News() {
+  // Fetch news data
+  const response = await fetch(
+    'https://daily-news-5k66.onrender.com/news/written/get/',
+    {
+      cache: 'no-store', // Disable caching to always get fresh data
+    }
+  );
+  const newsData: NewsItem[] = await response.json();
+
   return (
     <div>
       <Header />
@@ -11,97 +34,9 @@ export default function News() {
         <div className="grid md:grid-cols-[1fr,300px] gap-8">
           {/* Main Content */}
           <div className="space-y-8">
-            {/* News One */}
-            <article className="border-b pb-8">
-              <h2 className="text-2xl font-bold mb-4">
-                <Link
-                  href="/text-news/major-political-development"
-                  className="hover:text-primary"
-                >
-                  Major Political Development Shapes Global Policy
-                </Link>
-              </h2>
-              <p className="text-muted-foreground mb-4">
-                Breaking news coverage of significant political events and their
-                impact on international relations. Lorem ipsum dolor sit amet,
-                consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut
-                labore.
-              </p>
-              <Link
-                href="/text-news/major-political-development"
-                className="text-primary hover:underline"
-              >
-                Read more
-              </Link>
-            </article>
-
-            {/* News Two */}
-            <article className="border-b pb-8">
-              <h2 className="text-2xl font-bold mb-4">
-                <Link
-                  href="/text-news/economic-reforms"
-                  className="hover:text-primary"
-                >
-                  Economic Reforms Signal Market Changes
-                </Link>
-              </h2>
-              <p className="text-muted-foreground mb-4">
-                Analysis of recent economic policy changes and their potential
-                impact on global markets. Ut enim ad minim veniam, quis nostrud
-                exercitation ullamco laboris nisi ut aliquip.
-              </p>
-              <Link
-                href="/text-news/economic-reforms"
-                className="text-primary hover:underline"
-              >
-                Read more
-              </Link>
-            </article>
-
-            {/* News Three */}
-            <article className="border-b pb-8">
-              <h2 className="text-2xl font-bold mb-4">
-                Technology Innovation Breakthrough
-              </h2>
-              <p className="text-muted-foreground mb-4">
-                Latest developments in technology sector showing promising
-                results for future applications. Duis aute irure dolor in
-                reprehenderit in voluptate velit esse cillum dolore.
-              </p>
-              <Link href="#" className="text-primary hover:underline">
-                Read more
-              </Link>
-            </article>
-
-            {/* News Four */}
-            <article className="border-b pb-8">
-              <h2 className="text-2xl font-bold mb-4">
-                Environmental Initiative Launches
-              </h2>
-              <p className="text-muted-foreground mb-4">
-                New global initiative aims to address climate change through
-                collaborative effort. Excepteur sint occaecat cupidatat non
-                proident, sunt in culpa qui officia.
-              </p>
-              <Link href="#" className="text-primary hover:underline">
-                Read more
-              </Link>
-            </article>
-
-            {/* News Five */}
-            <article className="border-b pb-8">
-              <h2 className="text-2xl font-bold mb-4">
-                Cultural Event Draws Global Attention
-              </h2>
-              <p className="text-muted-foreground mb-4">
-                International cultural festival celebrates diversity and
-                promotes global understanding. Deserunt mollit anim id est
-                laborum consectetur adipiscing elit.
-              </p>
-              <Link href="#" className="text-primary hover:underline">
-                Read more
-              </Link>
-            </article>
+            {newsData.map((news) => (
+              <ArticleCard key={news.id} news={news} />
+            ))}
           </div>
 
           {/* Sidebar */}
@@ -169,7 +104,6 @@ export default function News() {
           </div>
         </div>
       </main>
-
       <GenFooter />
     </div>
   );
