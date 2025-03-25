@@ -1,11 +1,30 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
-import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Search, Menu, MoreHorizontal } from 'lucide-react';
+import { Search, Menu, MoreHorizontal, User } from 'lucide-react';
+import IdModal from './id-modal';
+import toast from 'react-hot-toast';
 
 export default function Header() {
+  const [showIdModal, setShowIdModal] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const storedId = localStorage.getItem('myId');
+    setUserId(storedId);
+  }, []);
+
+  const handleIdSubmit = (newId: string) => {
+    localStorage.setItem('myId', newId);
+    setUserId(newId);
+    setShowIdModal(false);
+    toast.success('User ID updated successfully');
+  };
+
   return (
     <header className="border-b sticky top-0 bg-white z-50">
       <div className="container mx-auto px-4">
@@ -30,6 +49,13 @@ export default function Header() {
               <Link href="#" className="text-sm font-medium hover:text-primary">
                 Election 2024
               </Link>
+              <button
+                onClick={() => setShowIdModal(true)}
+                className="text-sm font-medium hover:text-primary flex items-center gap-2"
+              >
+                <User className="h-4 w-4" />
+                {userId ? `ID: ${userId}` : 'Set User ID'}
+              </button>
             </nav>
           </div>
           <div className="flex items-center gap-4">
@@ -100,6 +126,14 @@ export default function Header() {
           </div>
         </div>
       </div>
+
+      {showIdModal && (
+        <IdModal
+          isOpen={showIdModal}
+          onClose={() => setShowIdModal(false)}
+          onSubmit={handleIdSubmit}
+        />
+      )}
     </header>
   );
 }

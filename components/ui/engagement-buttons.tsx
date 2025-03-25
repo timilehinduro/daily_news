@@ -9,6 +9,8 @@ interface EngagementButtonsProps {
   initialLikes: number;
   initialShares: number;
   initialBookmarks?: number; // Add initialBookmarks prop
+  content_type?: string; // Add initialBookmarks prop
+  Platform?: string; // Add initialBookmarks prop
 }
 
 export default function EngagementButtons({
@@ -16,6 +18,8 @@ export default function EngagementButtons({
   initialLikes,
   initialShares,
   initialBookmarks = 0, // Default to 0 if not provided
+  content_type = 'written', // Default to 'written' if not provided
+  Platform = 'X', // Default to 'written' if not provided
 }: EngagementButtonsProps) {
   const [idModal, setIdModal] = useState(false);
   const [id, setId] = useState('');
@@ -46,7 +50,11 @@ export default function EngagementButtons({
             headers: {
               'Content-Type': 'application/json',
             },
-            body: JSON.stringify({ userId: id }),
+            body: JSON.stringify({
+              user_id: id,
+              content_id: `${newsId}`,
+              content_type: content_type,
+            }),
           }
         );
         if (response.ok) {
@@ -105,7 +113,7 @@ export default function EngagementButtons({
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ userId: id }),
+          body: JSON.stringify({ user_id: id, content_id: newsId }),
         }
       );
       const data = await response.json();
@@ -131,7 +139,7 @@ export default function EngagementButtons({
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ userId: id }),
+          body: JSON.stringify({ user_id: id, Platform: 'X' }),
         }
       );
       const data = await response.json();
@@ -149,6 +157,11 @@ export default function EngagementButtons({
   };
 
   const handleBookmark = async () => {
+    console.log({
+      userId: id,
+      content_id: newsId,
+      content_type,
+    });
     try {
       const response = await fetch(
         `https://daily-news-5k66.onrender.com/news/written/${newsId}/bookmark/`,
@@ -157,9 +170,14 @@ export default function EngagementButtons({
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ userId: id }),
+          body: JSON.stringify({
+            user_id: id,
+            content_id: newsId,
+            content_type,
+          }),
         }
       );
+
       const data = await response.json();
 
       if (response.ok) {

@@ -55,7 +55,7 @@ export default function CommentsModal({
           },
           body: JSON.stringify({
             text: newComment,
-            userId: id,
+            user_id: id,
           }),
         }
       );
