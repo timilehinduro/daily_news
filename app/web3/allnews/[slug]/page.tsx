@@ -19,6 +19,7 @@ interface VideoArticle {
   video_url: string;
   summary: string;
   created_at: string;
+  category: string;
   likes: Array<{ id: number; created_at: string }>;
   comments: Array<{
     id: number;
@@ -79,11 +80,18 @@ export default function VideoArticlePage({
       <Header />
 
       <main className="flex-1 container mx-auto px-4 py-8">
+        <div className="flex items-center gap-4 pb-6">
+          <Link href="/web3/allnews" className="text-primary hover:underline">
+            &larr; Back to News
+          </Link>
+        </div>
         <div className="grid md:grid-cols-[1fr,300px] gap-8">
           {/* Main Content */}
           <article className="space-y-6">
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>{article.category || 'General'}</span>
+                <span>•</span>
                 <time dateTime={article.created_at}>
                   {new Date(article.created_at).toLocaleDateString()}
                 </time>
@@ -122,7 +130,7 @@ export default function VideoArticlePage({
                 href="/web3/allnews"
                 className="text-primary hover:underline"
               >
-                &larr; Back to Video News
+                &larr; Back to News
               </Link>
             </div>
           </article>

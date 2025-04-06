@@ -15,6 +15,7 @@ interface VideoNews {
   video_url: string;
   summary: string;
   created_at: string;
+  category: string;
   likes: Array<{ id: number; created_at: string }>;
   comments: Array<{ id: number; text: string; created_at: string }>;
   shares: Array<{ id: number; platform: string; created_at: string }>;
@@ -51,7 +52,7 @@ export default function VideoNewsPage() {
       <Header />
 
       <main className="flex-1 container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Video News</h1>
+        <h1 className="text-3xl font-bold mb-8">Latest News</h1>
 
         <div className="grid md:grid-cols-[4fr,1fr] gap-8">
           {/* Main Content */}
@@ -64,6 +65,8 @@ export default function VideoNewsPage() {
                   </div>
                   <div className="md:w-1/3">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
+                      <span>{item.category || 'General'}</span>
+                      <span>•</span>
                       <time dateTime={item.created_at}>
                         {new Date(item.created_at).toLocaleDateString()}
                       </time>
