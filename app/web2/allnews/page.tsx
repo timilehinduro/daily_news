@@ -4,12 +4,14 @@ import Link from 'next/link';
 import Image from 'next/image';
 import ReactMarkdown from 'react-markdown';
 import { Button } from '@/components/ui/button';
+import { ArrowRight } from 'lucide-react';
 
 interface NewsItem {
   id: number;
   published_content: number;
   title: string;
   content: string;
+  category: string;
   created_at: string;
   image_url: string;
   likes: Array<{ id: number; created_at: string }>;
@@ -51,7 +53,7 @@ export default async function NewsPage() {
                   </div>
                   <div className="md:w-2/3">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
-                      <span>General</span>
+                      <span>{item.category || 'General'}</span>
                       <span>•</span>
                       <time dateTime={item.created_at}>
                         {new Date(item.created_at).toLocaleDateString()}
@@ -74,7 +76,9 @@ export default async function NewsPage() {
                       href={`/web2/allnews/${item.id}`}
                       className="text-primary hover:underline"
                     >
-                      Read more
+                      <span className="flex items-center gap-1">
+                        Read more <ArrowRight />
+                      </span>
                     </Link>
                   </div>
                 </div>

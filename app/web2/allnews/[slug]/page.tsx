@@ -18,6 +18,7 @@ interface Article {
   content: string;
   image_url: string;
   created_at: string;
+  category: string;
   likes: Array<{ id: number; created_at: string }>;
   comments: Array<{ id: number; text: string; created_at: string }>;
   shares: Array<{ id: number; platform: string; created_at: string }>;
@@ -89,6 +90,8 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             </Link>
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <span>{article.category || 'General'}</span>
+                <span>•</span>
                 <time dateTime={article.created_at}>
                   {new Date(article.created_at).toLocaleDateString()}
                 </time>
