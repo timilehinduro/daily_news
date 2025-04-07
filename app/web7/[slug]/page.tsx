@@ -111,6 +111,14 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
         <div className="grid md:grid-cols-[1fr,300px] gap-8">
           {/* Main Content */}
           <article className="space-y-6">
+            <div className="flex items-center gap-4 pt-6">
+              <Link
+                href="/web7/allnews"
+                className="text-primary hover:underline"
+              >
+                &larr; Back to News
+              </Link>
+            </div>
             <div className="space-y-4">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>{article.category}</span>
@@ -169,7 +177,10 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             )}
 
             <div className="flex items-center gap-4 pt-6">
-              <Link href="/text-news" className="text-primary hover:underline">
+              <Link
+                href="/web7/allnews"
+                className="text-primary hover:underline"
+              >
                 &larr; Back to News
               </Link>
             </div>

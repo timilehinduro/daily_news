@@ -16,6 +16,7 @@ interface NewsItem {
   title: string;
   content: string;
   created_at: string;
+  category: string;
   likes: Array<{ id: number; created_at: string }>;
   comments: Array<{ id: number; text: string; created_at: string }>;
   shares: Array<{ id: number; platform: string; created_at: string }>;
@@ -48,11 +49,12 @@ export default function News() {
     <div>
       <Header />
       <main className="flex-1 container mx-auto px-4 py-8">
+        <h1 className="text-3xl font-bold mb-8">Latest News</h1>
         <div className="grid md:grid-cols-[1fr,300px] gap-8">
           {/* Main Content */}
           <div className="space-y-8">
             {newsData.map((news) => (
-              <ArticleCard key={news.id} news={news} url={'/web7'}/>
+              <ArticleCard key={news.id} news={news} url={'/web7'} />
             ))}
           </div>
 
