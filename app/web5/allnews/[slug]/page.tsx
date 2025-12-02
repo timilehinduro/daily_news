@@ -118,7 +118,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             )}
 
             <div className="prose max-w-3xl mx-auto">
-              <ReactMarkdown>{article.content}</ReactMarkdown>
+              <div dangerouslySetInnerHTML={{ __html: article.content }} />
             </div>
 
             {/* Engagement Section */}

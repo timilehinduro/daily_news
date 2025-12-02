@@ -68,9 +68,7 @@ export default async function NewsPage() {
                       </Link>
                     </h2>
                     <div className="prose max-w-3xl mx-auto">
-                      <ReactMarkdown>
-                        {item.content.slice(0, 200)}
-                      </ReactMarkdown>
+                      <div dangerouslySetInnerHTML={{ __html: item.content.substring(0, 300) }} />
                     </div>
                     <Link
                       href={`/web5/allnews/${item.id}`}

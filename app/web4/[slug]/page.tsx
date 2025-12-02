@@ -14,6 +14,7 @@ import { notFound } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import welcomeModalContent from '@/lib/modal-content';
+import DOMPurify from 'dompurify';
 
 // Update the interface to include engagement fields
 interface Article {
@@ -43,13 +44,21 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   useEffect(() => {
     async function fetchArticle() {
       try {
-        const response = await fetch(
+        const res = await fetch(
           'https://daily-news-5k66.onrender.com/news/written/get/'
         );
-        const articles: Article[] = await response.json();
-        const articleId = parseInt(params.slug);
-        const foundArticle = articles[articleId - 1];
-        setArticle(foundArticle || null);
+        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+        const articleId = Number.parseInt(params.slug, 10);
+        const articles: Article[] = await res.json();
+
+        // Prefer finding by id; fall back to index if needed
+        const found =
+          articles.find((a) => a.id === articleId) ||
+          articles[articleId - 1] ||
+          null;
+
+        console.log('articleId', articleId, 'found', !!found);
+        setArticle(found);
       } catch (error) {
         console.error('Error fetching article:', error);
         setArticle(null);
@@ -78,14 +87,26 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
 
   if (loading) {
     return (
-      <div>
-        <p>Loading...</p>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 container mx-auto px-4 py-8">
+          <p>Loading article...</p>
+        </main>
+        <GenFooter />
       </div>
     );
   }
 
   if (!article) {
-    notFound();
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 container mx-auto px-4 py-8">
+          <p>Article not found</p>
+        </main>
+        <GenFooter />
+      </div>
+    );
   }
 
   return (
@@ -93,7 +114,9 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
       <Header />
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
         <div className="text-center mb-6">
-          <h2 className="text-2xl font-bold mb-2">{welcomeModalContent.brief}</h2>
+          <h2 className="text-2xl font-bold mb-2">
+            {welcomeModalContent.brief}
+          </h2>
           <Image
             src={welcomeModalContent.image}
             alt="Daily News"
@@ -111,7 +134,10 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
           {/* Main Content */}
           <article className="space-y-6">
             <div className="flex items-center gap-4 pt-6">
-              <Link href="/web4/allnews" className="text-primary hover:underline">
+              <Link
+                href="/web4/allnews"
+                className="text-primary hover:underline"
+              >
                 &larr; Back to News
               </Link>
             </div>
@@ -129,13 +155,12 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
               </div>
             </div>
 
-            <div className="prose prose-gray max-w-none">
-              {article.content.split('\n\n').map((paragraph, index) => (
-                <div key={index} className="prose max-w-3xl">
-                  <ReactMarkdown>{paragraph}</ReactMarkdown>
-                </div>
-              ))}
-            </div>
+            <div
+              className="prose prose-gray max-w-none"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(article?.content || ''),
+              }}
+            />
 
             {/* Add engagement section */}
             <div className="flex items-center gap-4 text-sm text-muted-foreground border-t pt-4">
@@ -155,7 +180,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
               </button>
             </div>
 
-            {showComments && (
+            {showComments && article && (
               <CommentsModal
                 url={`https://daily-news-5k66.onrender.com/news/written/${article.id}/comment/`}
                 newsId={article.id}
@@ -173,7 +198,10 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
             )}
 
             <div className="flex items-center gap-4 pt-6">
-              <Link href="/web4/allnews" className="text-primary hover:underline">
+              <Link
+                href="/web4/allnews"
+                className="text-primary hover:underline"
+              >
                 &larr; Back to News
               </Link>
             </div>

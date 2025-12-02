@@ -1,8 +1,8 @@
-
 import Link from 'next/link';
 import { useState } from 'react';
 import { ArrowRight, MessageCircle } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
+import Markdown from 'react-markdown';
 
 interface ArticleCardProps {
   news: {
@@ -19,6 +19,12 @@ interface ArticleCardProps {
 }
 
 export default function ArticleCard({ news, url }: ArticleCardProps) {
+  const maxContentLength = 300;
+  const truncatedContent =
+    news.content.length > maxContentLength
+      ? news.content.substring(0, maxContentLength) + '...'
+      : news.content;
+
   return (
     <article className="border-b pb-8">
       <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
@@ -34,7 +40,7 @@ export default function ArticleCard({ news, url }: ArticleCardProps) {
         </Link>
       </h2>
       <div className="prose max-w-3xl">
-        <ReactMarkdown>{news.content.slice(0, 200)}</ReactMarkdown>
+        <div dangerouslySetInnerHTML={{ __html: truncatedContent }} />
       </div>
       <Link
         href={`${url}/${news.id}`}

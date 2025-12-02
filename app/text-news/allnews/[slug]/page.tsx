@@ -12,6 +12,9 @@ import toast from 'react-hot-toast';
 import IdModal from '@/components/ui/id-modal';
 import ReactMarkdown from 'react-markdown';
 import { MessageCircle } from 'lucide-react';
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
+import DOMPurify from 'dompurify';
 
 // Update the interface to include engagement fields
 interface Article {
@@ -44,13 +47,21 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   useEffect(() => {
     async function fetchArticle() {
       try {
-        const response = await fetch(
+        const res = await fetch(
           'https://daily-news-5k66.onrender.com/news/written/get/'
         );
-        const articles: Article[] = await response.json();
-        const articleId = parseInt(params.slug);
-        const foundArticle = articles[articleId - 1];
-        setArticle(foundArticle || null);
+        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+        const articleId = Number.parseInt(params.slug, 10);
+        const articles: Article[] = await res.json();
+
+        // Prefer finding by id; fall back to index if needed
+        const found =
+          articles.find((a) => a.id === articleId) ||
+          articles[articleId - 1] ||
+          null;
+
+        console.log('articleId', articleId, 'found', !!found);
+        setArticle(found);
       } catch (error) {
         console.error('Error fetching article:', error);
         setArticle(null);
@@ -79,14 +90,26 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
 
   if (loading) {
     return (
-      <div>
-        <p>Loading...</p>
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 container mx-auto px-4 py-8">
+          <p>Loading article...</p>
+        </main>
+        <GenFooter />
       </div>
     );
   }
 
   if (!article) {
-    notFound();
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 container mx-auto px-4 py-8">
+          <p>Article not found</p>
+        </main>
+        <GenFooter />
+      </div>
+    );
   }
 
   return (
@@ -103,46 +126,47 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
               </Link>
             </div>
             <div className="space-y-4">
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              {/* <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <span>{article.category || 'General'}</span>
                 <span>•</span>
                 <time dateTime={article.created_at}>
                   {new Date(article.created_at).toLocaleDateString()}
                 </time>
-              </div>
-              <h1 className="text-4xl font-bold">{article.title}</h1>
+              </div> */}
+              <h1 className="text-4xl font-bold">{article?.title}</h1>
               <div className="flex items-center gap-2 text-sm">
                 <span>By Daily News AI</span>
               </div>
             </div>
 
-            <div className="prose prose-gray max-w-none">
-              {article.content.split('\n\n').map((paragraph, index) => (
-                <div key={index} className="prose max-w-3xl">
-                  <ReactMarkdown>{paragraph}</ReactMarkdown>
-                </div>
-              ))}
-            </div>
+            <div
+              className="prose prose-gray max-w-none"
+              dangerouslySetInnerHTML={{
+                __html: DOMPurify.sanitize(article?.content || ''),
+              }}
+            />
 
             {/* Add engagement section */}
-            <div className="flex items-center gap-4 text-sm text-muted-foreground border-t pt-4">
-              <EngagementButtons
-                url={`https://daily-news-5k66.onrender.com/news/written`}
-                newsId={article.id}
-                initialLikes={article.likes.length}
-                initialShares={article.shares.length}
-              />
-              <button
-                onClick={() => setShowComments(true)}
-                className="flex items-center gap-1 hover:text-primary transition-colors"
-              >
-                <span className="flex items-center gap-1">
-                  <MessageCircle /> {article.comments.length}
-                </span>
-              </button>
-            </div>
+            {article && (
+              <div className="flex items-center gap-4 text-sm text-muted-foreground border-t pt-4">
+                <EngagementButtons
+                  url={`https://daily-news-5k66.onrender.com/news/written`}
+                  newsId={article.id}
+                  initialLikes={article.likes.length}
+                  initialShares={article.shares.length}
+                />
+                <button
+                  onClick={handleCommentsClick}
+                  className="flex items-center gap-1 hover:text-primary transition-colors"
+                >
+                  <span className="flex items-center gap-1">
+                    <MessageCircle /> {article.comments.length}
+                  </span>
+                </button>
+              </div>
+            )}
 
-            {showComments && (
+            {showComments && article && (
               <CommentsModal
                 url={`https://daily-news-5k66.onrender.com/news/written/${article.id}/comment/`}
                 newsId={article.id}
