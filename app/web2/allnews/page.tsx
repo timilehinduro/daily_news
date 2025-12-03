@@ -28,6 +28,7 @@ export default async function NewsPage() {
     }
   );
   const newsData: NewsItem[] = await response.json();
+  
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -68,9 +69,7 @@ export default async function NewsPage() {
                       </Link>
                     </h2>
                     <div className="prose max-w-3xl mx-auto">
-                      <ReactMarkdown>
-                        {item.content.slice(0, 200)}
-                      </ReactMarkdown>
+                      <div dangerouslySetInnerHTML={{ __html: item.content.substring(0, 300) }} />
                     </div>
                     <Link
                       href={`/web2/allnews/${item.id}`}
