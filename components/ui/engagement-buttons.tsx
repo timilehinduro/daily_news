@@ -17,9 +17,9 @@ interface EngagementButtonsProps {
   newsId: number;
   initialLikes: number;
   initialShares: number;
-  initialBookmarks?: number; // Add initialBookmarks prop
-  content_type?: string; // Add initialBookmarks prop
-  Platform?: string; // Add initialBookmarks prop
+  initialBookmarks?: number;
+  content_type?: string;
+  Platform?: string;
 }
 
 export default function EngagementButtons({
@@ -27,9 +27,9 @@ export default function EngagementButtons({
   newsId,
   initialLikes,
   initialShares,
-  initialBookmarks = 0, // Default to 0 if not provided
-  content_type = 'written', // Default to 'written' if not provided
-  Platform = 'X', // Default to 'written' if not provided
+  initialBookmarks = 0,
+  content_type = 'written',
+  Platform = 'X',
 }: EngagementButtonsProps) {
   const [idModal, setIdModal] = useState(false);
   const [id, setId] = useState('');
@@ -54,17 +54,35 @@ export default function EngagementButtons({
       if (!id) return;
 
       try {
-        const response = await fetch(`${url}/${newsId}/bookmark/`, {
+        // ❌ OLD CODE - GET request with body causes error:
+        // const response = await fetch(`${url}/${newsId}/bookmark/`, {
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //     Authorization: `Bearer ${localStorage.getItem('sessionToken')}`,
+        //   },
+        //   body: JSON.stringify({
+        //     user_id: id,
+        //     content_id: `${newsId}`,
+        //     content_type: content_type,
+        //   }),
+        // });
+
+        // ✅ NEW CODE - Use URL parameters for GET request:
+        const params = new URLSearchParams({
+          user_id: id,
+          content_id: `${newsId}`,
+          content_type: content_type,
+        });
+        
+        const response = await fetch(`${url}/${newsId}/bookmark/?${params}`, {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${localStorage.getItem('sessionToken')}`,
           },
-          body: JSON.stringify({
-            user_id: id,
-            content_id: `${newsId}`,
-            content_type: content_type,
-          }),
+          // No body for GET requests
         });
+
         if (response.ok) {
           const data = await response.json();
           setIsBookmarked(data.isBookmarked);
@@ -75,7 +93,7 @@ export default function EngagementButtons({
     };
 
     checkBookmarkStatus();
-  }, [id, newsId]);
+  }, [id, newsId, url, content_type]);
 
   useEffect(() => {
     if (id) {
