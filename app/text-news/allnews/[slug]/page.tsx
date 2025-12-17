@@ -44,34 +44,60 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     }
   }, []);
 
+  // useEffect(() => {
+  //   async function fetchArticle() {
+  //     try {
+  //       const res = await fetch(
+  //         'https://daily-news-5k66.onrender.com/news/written/get/'
+  //       );
+  //       if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+  //       const articleId = Number.parseInt(params.slug, 10);
+  //       const articles: Article[] = await res.json();
+
+  //       // Prefer finding by id; fall back to index if needed
+  //       const found =
+  //         articles.find((a) => a.id === articleId) ||
+  //         articles[articleId - 1] ||
+  //         null;
+
+  //       console.log('articleId', articleId, 'found', !!found);
+  //       setArticle(found);
+  //     } catch (error) {
+  //       console.error('Error fetching article:', error);
+  //       setArticle(null);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   }
+
+  //   fetchArticle();
+  // }, [params.slug]);
+
   useEffect(() => {
-    async function fetchArticle() {
-      try {
-        const res = await fetch(
-          'https://daily-news-5k66.onrender.com/news/written/get/'
-        );
-        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-        const articleId = Number.parseInt(params.slug, 10);
-        const articles: Article[] = await res.json();
-
-        // Prefer finding by id; fall back to index if needed
-        const found =
-          articles.find((a) => a.id === articleId) ||
-          articles[articleId - 1] ||
-          null;
-
-        console.log('articleId', articleId, 'found', !!found);
-        setArticle(found);
-      } catch (error) {
-        console.error('Error fetching article:', error);
-        setArticle(null);
-      } finally {
-        setLoading(false);
-      }
+  async function fetchArticle() {
+    try {
+      const res = await fetch(
+        'https://daily-news-5k66.onrender.com/news/written/get/'
+      );
+      if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+      
+      const articles: Article[] = await res.json();
+      
+      // Find by slug instead of ID
+      const found = articles.find((a) => a.slug === params.slug);
+      
+      console.log('slug', params.slug, 'found', !!found);
+      setArticle(found || null);
+    } catch (error) {
+      console.error('Error fetching article:', error);
+      setArticle(null);
+    } finally {
+      setLoading(false);
     }
+  }
 
-    fetchArticle();
-  }, [params.slug]);
+  fetchArticle();
+}, [params.slug]);
 
   const handleCommentsClick = () => {
     if (!userId) {
