@@ -49,36 +49,85 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     }
   }, []);
 
-  useEffect(() => {
-    const fetchArticle = async () => {
-      try {
-        const response = await fetch(
-          'https://daily-news-5k66.onrender.com/news/written-image/get/'
-        );
-        const articles: Article[] = await response.json();
-        const articleId = parseInt(params.slug, 10);
+  // useEffect(() => {
+  //   const fetchArticle = async () => {
+  //     try {
+  //       const response = await fetch(
+  //         'https://daily-news-5k66.onrender.com/news/written-image/get/'
+  //       );
+  //       const articles: Article[] = await response.json();
+  //       const articleId = parseInt(params.slug, 10);
         
-        // ✅ ADDED - validate articleId before searching
-        if (isNaN(articleId)) {
-          setArticle(null);
-          setLoading(false);
-          return;
-        }
+  //       // ✅ ADDED - validate articleId before searching
+  //       if (isNaN(articleId)) {
+  //         setArticle(null);
+  //         setLoading(false);
+  //         return;
+  //       }
         
-        const foundArticle = articles.find(
-          (article) => article.id === articleId
-        );
-        setArticle(foundArticle || null);
-      } catch (error) {
-        console.error('Error fetching article:', error);
-        setArticle(null);
-      } finally {
-        setLoading(false);
-      }
-    };
+  //       const foundArticle = articles.find(
+  //         (article) => article.id === articleId
+  //       );
+  //       setArticle(foundArticle || null);
+  //     } catch (error) {
+  //       console.error('Error fetching article:', error);
+  //       setArticle(null);
+  //     } finally {
+  //       setLoading(false);
+  //     }
+  //   };
 
-    fetchArticle();
-  }, [params.slug]);
+  //   fetchArticle();
+  // }, [params.slug]);
+
+  useEffect(() => {
+  const fetchArticle = async () => {
+    try {
+      const response = await fetch(
+        'https://daily-news-5k66.onrender.com/news/written-image/get/'
+      );
+      const articles: Article[] = await response.json();
+      
+      console.log('🔍 DEBUG INFO:');
+      console.log('params.slug:', params.slug);
+      console.log('params.slug type:', typeof params.slug);
+      
+      const articleId = parseInt(params.slug, 10);
+      console.log('Parsed articleId:', articleId);
+      console.log('Is NaN?:', isNaN(articleId));
+      
+      console.log('Total articles fetched:', articles.length);
+      console.log('Article IDs:', articles.map(a => a.id));
+      
+      if (isNaN(articleId)) {
+        console.log('❌ ArticleId is NaN');
+        setArticle(null);
+        setLoading(false);
+        return;
+      }
+      
+      const foundArticle = articles.find(
+        (article) => article.id === articleId
+      );
+      
+      console.log('Found article?:', !!foundArticle);
+      if (foundArticle) {
+        console.log('✅ Article found:', foundArticle.title);
+      } else {
+        console.log('❌ No article with ID:', articleId);
+      }
+      
+      setArticle(foundArticle || null);
+    } catch (error) {
+      console.error('Error fetching article:', error);
+      setArticle(null);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchArticle();
+}, [params.slug]);
 
   const handleCommentsClick = () => {
     if (!userId) {
