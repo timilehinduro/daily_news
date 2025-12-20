@@ -60,17 +60,23 @@ export default async function NewsPage() {
                     </div>
                     <h2 className="text-2xl font-bold mb-2">
                       <Link
-                        href={`/web8/allnews/${item.id}`}
+                        href={`/web7/allnews/${item.id}`}
                         className="hover:text-primary"
                       >
                         {item.title}
                       </Link>
                     </h2>
-                    <div className="prose max-w-3xl mx-auto">
+                    {/* <div className="prose max-w-3xl mx-auto">
                       <ReactMarkdown>
                         {item.content.slice(0, 200)}
                       </ReactMarkdown>
-                    </div>
+                    </div> */}
+                    <div 
+                      className="prose max-w-none"
+                      dangerouslySetInnerHTML={{ 
+                        __html: item.content.slice(0, 200) + '...' 
+                      }}
+                    />
                     <Link
                       href={`/web7/allnews/${item.id}`}
                       className="text-primary hover:underline"
