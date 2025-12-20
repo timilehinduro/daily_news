@@ -61,7 +61,7 @@ export default function VideoNewsPage() {
             {videoNews.map((item) => (
               <article key={item.id} className="border-b pb-8">
                 <div className="md:flex gap-6">
-                  <div className="md:w-2/3 mb-4 md:mb-0 relative">
+                  <div className="md:w-1/3 mb-4 md:mb-0">
                     <VideoPlayer src={item.video_url} />
                   </div>
                   <div className="md:w-1/3">
@@ -80,7 +80,13 @@ export default function VideoNewsPage() {
                         {item.title}
                       </Link>
                     </h2>
-                    <p className="text-muted-foreground mb-4">{item.summary}</p>
+                    {/* <p className="text-muted-foreground mb-4">{item.summary}</p> */}
+                    <p 
+                      className="text-muted-foreground mb-4"
+                      dangerouslySetInnerHTML={{ 
+                        __html: item.summary 
+                      }}
+                    />
                     <Link
                       className="text-primary hover:underline"
                       href={`/web9/allnews/${item.id}`}
