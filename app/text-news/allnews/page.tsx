@@ -30,11 +30,13 @@ export default async function News() {
   const newsData: NewsItem[] = await response.json();
 
   return (
-    <div>
+    <div className="min-h-screen flex flex-col">
       <Header />
+      
       <main className="flex-1 container mx-auto px-4 py-8">
         <h1 className="text-3xl font-bold mb-8">Latest News</h1>
-        <div className="grid md:grid-cols-[1fr,300px] gap-8">
+
+        <div className="grid md:grid-cols-[2fr,1fr] gap-8">
           {/* Main Content */}
           <div className="space-y-8">
             {newsData.map((news) => (
@@ -52,7 +54,6 @@ export default async function News() {
             <section className="border rounded-lg p-4">
               <h3 className="font-bold mb-4">Advertisement</h3>
               <div className="bg-muted aspect-square flex items-center justify-center">
-                {/* <span className="text-muted-foreground">Ad Space</span> */}
                 <Image
                   src="/icecream.jpg"
                   alt="Ad Space"
@@ -118,6 +119,7 @@ export default async function News() {
           </div>
         </div>
       </main>
+
       <GenFooter />
     </div>
   );
