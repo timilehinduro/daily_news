@@ -44,8 +44,23 @@ export default function VideoNewsPage() {
     fetchVideoNews();
   }, []);
 
+  // Helper function to strip HTML tags from summary
+  const stripHtmlTags = (html: string) => {
+    const tmp = document.createElement('DIV');
+    tmp.innerHTML = html;
+    return tmp.textContent || tmp.innerText || '';
+  };
+
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex flex-col">
+        <Header />
+        <main className="flex-1 container mx-auto px-4 py-8">
+          <p>Loading videos...</p>
+        </main>
+        <GenFooter />
+      </div>
+    );
   }
 
   return (
@@ -53,9 +68,9 @@ export default function VideoNewsPage() {
       <Header />
 
       <main className="flex-1 container mx-auto px-4 py-8">
-        <h1 className="text-3xl font-bold mb-8">Latest News</h1>
+        <h1 className="text-3xl font-bold mb-8">Latest Video News</h1>
 
-        <div className="grid md:grid-cols-[4fr,1fr] gap-8">
+        <div className="grid md:grid-cols-[2fr,1fr] gap-8">
           {/* Main Content */}
           <div className="space-y-8">
             {videoNews.map((item) => (
@@ -64,7 +79,7 @@ export default function VideoNewsPage() {
                   <div className="md:w-1/3 mb-4 md:mb-0">
                     <VideoPlayer src={item.video_url} />
                   </div>
-                  <div className="md:w-1/3">
+                  <div className="md:w-2/3">
                     <div className="flex items-center gap-2 text-sm text-muted-foreground mb-2">
                       <span>{item.category || 'General'}</span>
                       <span>•</span>
@@ -80,18 +95,15 @@ export default function VideoNewsPage() {
                         {item.title}
                       </Link>
                     </h2>
-                    {/* <p className="text-muted-foreground mb-4">{item.summary}</p> */}
-                    <p 
-                      className="text-muted-foreground mb-4"
-                      dangerouslySetInnerHTML={{ 
-                        __html: item.summary 
-                      }}
-                    />
+                    <p className="text-muted-foreground mb-4 line-clamp-3">
+                      {stripHtmlTags(item.summary).substring(0, 200)}
+                      {stripHtmlTags(item.summary).length > 200 ? '...' : ''}
+                    </p>
                     <Link
-                      className="text-primary hover:underline"
+                      className="text-primary hover:underline inline-flex items-center gap-1"
                       href={`/web9/allnews/${item.id}`}
                     >
-                      Watch Now
+                      Watch Now →
                     </Link>
                   </div>
                 </div>
