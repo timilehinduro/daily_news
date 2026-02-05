@@ -1,96 +1,150 @@
-# DailyNews
+# Daily News AI-Powered Platform
 
-DailyNews is a content generation, fact-checking, and content-processing web application designed to streamline the creation and verification of news articles. It allows users to generate content, automatically fact-check claims, categorize and tag articles, and publish verified information. The platform also enables user interactions, including liking, commenting, sharing, and bookmarking content.
+**DAILY NEWS** is an AI-driven news platform that showcases an end-to-end intelligent news publishing pipeline. It automates content generation using LLMs, applies fact-checking with external APIs, classifies and scores content for publishing, and renders it in various formats (text, image-enhanced, or video-based). It also supports user interaction (likes, shares, comments, bookmarks) through anonymous session tracking.
 
-### Features
+The system integrates AI services like OpenAI, Claude, Google Fact Check, NewsAPI, DALL·E, and Synthesia to create a dynamic, data-verified content pipeline suitable for news delivery at scale.
 
-* Content Generation – AI-powered article generation.
+## 🚀 Features
 
-* Fact-Checking – Automatic verification of claims using external fact-checking sources.
+### AI Content Generation
+Generate news content using large language models like GPT-3.5 (OpenAI) and Claude (Anthropic), with custom prompt templates and token controls.
 
-* Content Processing – Categorization, tagging, and publication decision-making.
+### Automated Fact-Checking
+Analyze and verify claims using external APIs for transparency, source credibility, accuracy, and clarity.
 
-* User Interaction – Users can like, comment, share, and bookmark content.
+### Content Processing Pipeline
+- NLP-based content classification and keyword tagging
+- Composite score calculation
+- Publish/unpublish decisions
 
-* User Authentication – Users enter a unique ID before interacting with content.
+### Multimodal Content Delivery
+Publish articles as:
+- Pure text
+- Text with AI-generated images (via DALL·E)
+- Videos with LLM-generated summaries (via Synthesia)
 
+### User Interaction
+- Anonymous user sessions tracked by UUID tokens
+- Users can like, comment, share, and bookmark content
 
-### Tech Stack
+### Admin Functionality
+- Admins can override publishing status
+- Moderate evidence for fact-checking
+- Manage all content types via Django admin
 
-* Backend: Python, Django, Django REST Framework
+### Frontend Integration
+Designed to work with a frontend built using React and TailwindCSS, consuming the backend APIs for content display and interaction.
 
-* Database: PostgreSQL
+### Deployed on Render
+Backend hosted on Render (Starter Tier), with CORS setup for frontend interaction. PostgreSQL used as the primary DB.
 
-* Frontend: (Handled by a separate team)
+## 🧠 Core Tech Stack
 
-* Deployment: Render
+- **Backend**: Django, Django REST Framework
+- **LLMs & AI**: OpenAI GPT-3.5, Anthropic Claude, DALL·E, Synthesia
+- **Fact Checking APIs**: Google Fact Check Tools API, NewsAPI
+- **Database**: PostgreSQL
+- **Deployment**: Render
+- **Frontend Integration**: React + TailwindCSS (via CORS)
 
+## 📁 Project Structure
 
-#### Installation & Setup
+```
+DailyNews/
+├── dailynews_backend/      # Project settings & root URL configuration
+├── content_generation/     # Handles prompt setup and LLM-based content generation
+├── fact_checking/          # Interfaces with APIs to verify factual accuracy
+├── content_processing/     # Categorizes content, computes scores, and manages publishing
+├── content_modality/       # Stores multimodal versions: text, image, and video
+├── user_management/        # Handles anonymous session creation and interaction tracking
+├── utils/                  # Shared helper functions and prompt utilities
+├── requirements.txt        # Python dependencies
+└── README.md               # Project documentation
+```
 
-1.⁠ ⁠Clone the repository:
+## 📦 Installation Guide
 
-git clone https://github.com/YOUR-USERNAME/DailyNews.git
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/<your-username>/DailyNews.git
 cd DailyNews
+```
 
+### 2. Create & activate virtual environment
 
-2.⁠ ⁠Create and activate a virtual environment:
+```bash
+python3 -m venv venv
+source venv/bin/activate
+```
 
-python -m venv venv  
-source venv/bin/activate  # On Windows, use venv\Scripts\activate
+### 3. Install dependencies
 
-
-3.⁠ ⁠Install dependencies:
-
+```bash
 pip install -r requirements.txt
+```
 
+### 4. Environment setup
 
-4.⁠ ⁠Run migrations:
+Create a `.env` file and add your API keys and DB config:
 
+```ini
+SECRET_KEY=...
+OPENAI_API_KEY=...
+GOOGLE_FACT_CHECK_API_KEY=...
+DATABASE_URL=...
+DEBUG=True
+```
+
+### 5. Run migrations & start development server
+
+```bash
 python manage.py migrate
-
-
-5.⁠ ⁠Start the development server:
-
 python manage.py runserver
+```
 
+## 🔗 API Endpoints Overview
 
+### User
+- `POST /api/user/login/` — Create user session
+- `GET /api/user/session/` — Validate session
 
-API Endpoints
+### Content Generation
+- `POST /api/content/generate/` — Create new article from prompt
 
-POST /api/user/login/ – Start a session with a user ID.
+### Fact-Checking
+- `POST /api/fact-check/` — Submit text to be verified
 
-GET /news/written/ – Retrieve all written content.
+### Content Processing
+- `POST /api/process/<id>/` — Categorize and score generated content
+- `GET|PUT /api/published/<id>/evidence/` — View or edit fact-check evidence
 
-POST /news/written/{id}/like/ – Like an article.
+### Written Content
+- `POST /news/written/`
+- `GET /news/written/get/`
+- `POST /news/written/<id>/comment/`, `/like/`, `/share/`, `/bookmark/`
 
-POST /news/written/{id}/comment/ – Add a comment.
+### Written + Image Content
+Same structure under `/news/written-image/`
 
-POST /news/written/{id}/share/ – Share an article.
+### Video Content
+Same structure under `/news/video/`
 
-POST /news/written/{id}/bookmark/ – Bookmark an article.
+## 🔐 Deployment Instructions (Render)
 
-More endpoints are available in the API documentation.
+1. **Connect repo to Render**
 
+2. **Configure build and start commands:**
+   ```bash
+   pip install -r requirements.txt
+   python manage.py migrate
+   gunicorn dailynews_backend.wsgi
+   ```
 
-Contributing
+3. **Add environment variables** under the Render dashboard
 
-1.⁠ ⁠Fork the repository.
+4. **Set CORS_ALLOWED_ORIGINS** to your frontend URL
 
+## 📘 License
 
-2.⁠ ⁠Create a feature branch (git checkout -b feature-name).
-
-
-3.⁠ ⁠Commit changes (git commit -m "Feature description").
-
-
-4.⁠ ⁠Push to GitHub (git push origin feature-name).
-
-
-5.⁠ ⁠Open a pull request.
-
-
-
-License
-
-This project is licensed under the MIT License.
+This project is licensed under the MIT License. See LICENSE for details.
