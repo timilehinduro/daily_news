@@ -11,7 +11,7 @@ export const welcomeModalContent: ModalContent = {
   to keep you informed about local, national, and global events and 
   affairs around you. Our news stories are selected using an artificial 
   intelligence (AI) system that filters, categorizes, and prioritizes existing 
-  information, shaping what you see based on inferred relevance, interests, 
+  information, shaping what you see based on relevance, interests, 
   engagement patterns, and editorial distribution criteria for news production.`,
 };
 
