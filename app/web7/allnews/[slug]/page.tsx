@@ -132,7 +132,7 @@ export default function ArticlePage({
 
         // ✅ FIXED: Use new endpoint with article.id
         const response = await fetch(
-          `https://daily-news-5k66.onrender.com/process/news/${article.id}/evidence/`
+          `https://daily-news-5k66.onrender.com/content-process/news/${article.id}/evidence/`
         );
 
         console.log('Evidence response status:', response.status);
