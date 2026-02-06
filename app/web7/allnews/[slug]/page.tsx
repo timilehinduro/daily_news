@@ -9,11 +9,12 @@ import Modal from '@/components/ui/modal';
 import { MessageCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState, use } from 'react'; // ✅ Added 'use'
-import ReactMarkdown from 'react-markdown';
+import { useEffect, useState, use } from 'react';
 
 interface Article {
   id: number;
+  published_content: number;
+  generated_content_id: number;  // ✅ NEW: The actual GeneratedContent ID for evidence
   title: string;
   content: string;
   author: string;
@@ -42,13 +43,11 @@ interface EvidenceResponse {
   has_evidence?: boolean;
 }
 
-// ✅ FIXED: Params is a Promise in Next.js 15+
 export default function ArticlePage({ 
   params 
 }: { 
   params: Promise<{ slug: string }> 
 }) {
-  // ✅ Unwrap params
   const unwrappedParams = use(params);
   const slug = unwrappedParams.slug;
 
@@ -60,7 +59,7 @@ export default function ArticlePage({
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [evidence, setEvidence] = useState<Evidence | null>(null);
   const [evidenceLoading, setEvidenceLoading] = useState(false);
-  const [mounted, setMounted] = useState(false); // ✅ Hydration safety
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
     setMounted(true);
@@ -73,7 +72,6 @@ export default function ArticlePage({
     }
   }, []);
 
-  // ✅ FIXED: Fetch article FIRST
   useEffect(() => {
     async function fetchArticle() {
       try {
@@ -86,27 +84,13 @@ export default function ArticlePage({
         const articles: Article[] = await response.json();
         const articleId = parseInt(slug, 10);
 
-        console.log('🔍 WEB7 DEBUG - Article Fetch:');
-        console.log('Slug:', slug);
-        console.log('Parsed ID:', articleId);
-        console.log('Available articles:', articles.map(a => ({ id: a.id, title: a.title })));
-
         if (isNaN(articleId)) {
-          console.log('❌ Invalid article ID');
           setArticle(null);
           setLoading(false);
           return;
         }
 
-        // ✅ CRITICAL FIX: Only use .find(), NO array index fallback
         const foundArticle = articles.find((a) => a.id === articleId);
-
-        if (foundArticle) {
-          console.log('✅ Article found:', foundArticle.title, 'ID:', foundArticle.id);
-        } else {
-          console.log('❌ No article with ID:', articleId);
-        }
-
         setArticle(foundArticle || null);
       } catch (error) {
         console.error('Error fetching article:', error);
@@ -119,7 +103,6 @@ export default function ArticlePage({
     fetchArticle();
   }, [slug]);
 
-  // ✅ FIXED: Fetch evidence AFTER article loads, using article.id
   useEffect(() => {
     if (!article || loading) return;
 
@@ -127,18 +110,21 @@ export default function ArticlePage({
       try {
         setEvidenceLoading(true);
 
-        console.log('🔍 WEB7 DEBUG - Evidence Fetch:');
-        console.log('Fetching evidence for article ID:', article.id);
+        // ✅ BEST SOLUTION: Use generated_content_id if available, fallback to published_content
+        const evidenceId = article.generated_content_id || article.published_content;
+        
+        if (!evidenceId) {
+          console.log('No evidence ID available');
+          setEvidence(null);
+          setEvidenceLoading(false);
+          return;
+        }
 
-        // ✅ FIXED: Use new endpoint with article.id
         const response = await fetch(
-          `https://daily-news-5k66.onrender.com/content-process/news/${article.id}/evidence/`
+          `https://daily-news-5k66.onrender.com/content-processing/news/${evidenceId}/evidence/`
         );
 
-        console.log('Evidence response status:', response.status);
-
         if (response.status === 404) {
-          console.log('ℹ️ No evidence available (404)');
           setEvidence(null);
           setEvidenceLoading(false);
           return;
@@ -149,14 +135,11 @@ export default function ArticlePage({
         }
 
         const data: EvidenceResponse = await response.json();
-        console.log('Evidence data:', data);
 
         if (data.evidence && Object.keys(data.evidence).length > 0) {
           setEvidence(data.evidence);
           setIsModalOpen(true);
-          console.log('✅ Evidence loaded, opening modal');
         } else {
-          console.log('⚠️ Empty evidence object');
           setEvidence(null);
         }
       } catch (error) {
@@ -199,7 +182,6 @@ export default function ArticlePage({
     );
   }
 
-  // ✅ FIXED: Proper JSX return instead of notFound()
   if (!article) {
     return (
       <div className="min-h-screen flex flex-col">
@@ -224,7 +206,6 @@ export default function ArticlePage({
     <div className="min-h-screen flex flex-col">
       <Header />
 
-      {/* ✅ FIXED: Only render modal if evidence exists */}
       {mounted && evidence && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
           <div className="space-y-4">
@@ -306,12 +287,8 @@ export default function ArticlePage({
                 </time>
               </div>
               <h1 className="text-4xl font-bold">{article.title}</h1>
-              {/* <div className="flex items-center gap-2 text-sm">
-                <span>By Daily News AI</span>
-              </div> */}
             </div>
 
-            {/* ✅ Evidence status indicator */}
             {mounted && !evidenceLoading && (
               <div className={`p-4 rounded-lg border ${
                 evidence 
@@ -346,7 +323,6 @@ export default function ArticlePage({
               <div dangerouslySetInnerHTML={{ __html: article.content }} />
             </div>
 
-            {/* ✅ Hydration-safe engagement buttons */}
             {mounted && (
               <div className="flex items-center gap-4 text-sm text-muted-foreground border-t pt-4">
                 <EngagementButtons
