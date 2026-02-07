@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, use } from 'react'; // ✅ Added 'use'
+import { useEffect, useState, use } from 'react';
 import GenFooter from '@/components/ui/footer';
 import Header from '@/components/ui/header';
 import Link from 'next/link';
@@ -16,6 +16,7 @@ import Modal from '@/components/ui/modal';
 interface VideoArticle {
   id: number;
   published_content: number;
+  generated_content_id?: number;
   title: string;
   video_url: string;
   summary: string;
@@ -53,7 +54,6 @@ interface EvidenceResponse {
   has_evidence?: boolean;
 }
 
-// ✅ FIXED: Params is a Promise
 export default function VideoArticlePage({
   params,
 }: {
@@ -125,7 +125,6 @@ export default function VideoArticlePage({
     fetchArticle();
   }, [slug]);
 
-  // ✅ FIXED: Fetch evidence after article loads
   useEffect(() => {
     if (!article || loading) return;
 
@@ -133,16 +132,19 @@ export default function VideoArticlePage({
       try {
         setEvidenceLoading(true);
 
-        console.log('🔍 WEB9 DEBUG - Evidence Fetch:');
-        console.log('Fetching for video ID:', article.id);
+        const evidenceId = article.generated_content_id || article.published_content;
+        
+        if (!evidenceId) {
+          setEvidence(null);
+          setEvidenceLoading(false);
+          return;
+        }
 
-        // ✅ FIXED: Use correct endpoint
         const response = await fetch(
-          `https://daily-news-5k66.onrender.com/process/news/${article.id}/evidence/`
+          `https://daily-news-5k66.onrender.com/content-processing/news/${evidenceId}/evidence/`
         );
 
         if (response.status === 404) {
-          console.log('ℹ️ No evidence available');
           setEvidence(null);
           setEvidenceLoading(false);
           return;
@@ -157,7 +159,6 @@ export default function VideoArticlePage({
         if (data.evidence && Object.keys(data.evidence).length > 0) {
           setEvidence(data.evidence);
           setIsModalOpen(true);
-          console.log('✅ Evidence loaded');
         } else {
           setEvidence(null);
         }
@@ -306,7 +307,6 @@ export default function VideoArticlePage({
               <h1 className="text-4xl font-bold">{article.title}</h1>
             </div>
 
-            {/* Evidence indicator */}
             {mounted && !evidenceLoading && (
               <div className={`p-4 rounded-lg border ${
                 evidence ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
