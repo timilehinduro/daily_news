@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, use } from 'react'; // ✅ Added 'use'
+import { useEffect, useState, use } from 'react';
 import GenFooter from '@/components/ui/footer';
 import Header from '@/components/ui/header';
 import Link from 'next/link';
@@ -15,6 +15,8 @@ import { Button } from '@/components/ui/button';
 
 interface Article {
   id: number;
+  published_content: number;
+  generated_content_id?: number;
   title: string;
   content: string;
   category: string;
@@ -42,7 +44,6 @@ interface EvidenceResponse {
   has_evidence?: boolean;
 }
 
-// ✅ FIXED: Params is a Promise
 export default function ArticlePage({ 
   params 
 }: { 
@@ -84,10 +85,6 @@ export default function ArticlePage({
         const articles: Article[] = await response.json();
         const articleId = parseInt(slug, 10);
 
-        console.log('🔍 WEB8 DEBUG - Article Fetch:');
-        console.log('Slug:', slug);
-        console.log('Parsed ID:', articleId);
-
         if (isNaN(articleId)) {
           setArticle(null);
           setLoading(false);
@@ -95,13 +92,6 @@ export default function ArticlePage({
         }
 
         const foundArticle = articles.find((article) => article.id === articleId);
-
-        if (foundArticle) {
-          console.log('✅ Article found:', foundArticle.title);
-        } else {
-          console.log('❌ No article with ID:', articleId);
-        }
-
         setArticle(foundArticle || null);
       } catch (error) {
         console.error('Error fetching article:', error);
@@ -114,7 +104,6 @@ export default function ArticlePage({
     fetchArticle();
   }, [slug]);
 
-  // ✅ FIXED: Fetch evidence after article loads
   useEffect(() => {
     if (!article || loading) return;
 
@@ -122,16 +111,19 @@ export default function ArticlePage({
       try {
         setEvidenceLoading(true);
 
-        console.log('🔍 WEB8 DEBUG - Evidence Fetch:');
-        console.log('Fetching for article ID:', article.id);
+        const evidenceId = article.generated_content_id || article.published_content;
+        
+        if (!evidenceId) {
+          setEvidence(null);
+          setEvidenceLoading(false);
+          return;
+        }
 
-        // ✅ FIXED: Use correct endpoint
         const response = await fetch(
-          `https://daily-news-5k66.onrender.com/process/news/${article.id}/evidence/`
+          `https://daily-news-5k66.onrender.com/content-processing/news/${evidenceId}/evidence/`
         );
 
         if (response.status === 404) {
-          console.log('ℹ️ No evidence available');
           setEvidence(null);
           setEvidenceLoading(false);
           return;
@@ -146,7 +138,6 @@ export default function ArticlePage({
         if (data.evidence && Object.keys(data.evidence).length > 0) {
           setEvidence(data.evidence);
           setIsModalOpen(true);
-          console.log('✅ Evidence loaded');
         } else {
           setEvidence(null);
         }
@@ -295,7 +286,6 @@ export default function ArticlePage({
               <h1 className="text-4xl font-bold">{article.title}</h1>
             </div>
 
-            {/* Evidence indicator */}
             {mounted && !evidenceLoading && (
               <div className={`p-4 rounded-lg border ${
                 evidence ? 'bg-green-50 border-green-200' : 'bg-gray-50 border-gray-200'
