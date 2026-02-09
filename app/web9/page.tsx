@@ -33,17 +33,13 @@ export default function TextNewsPage() {
 
           <div className="prose prose-gray mx-auto">
             <p className="text-lg leading-relaxed">
-              Daily News is an AI-driven online news website built to keep you
-              informed about local, national, and global events and affairs
-              around you. We employ an artificial intelligence (AI) system that
-              is custom-designed and trained for news curation and production.
-              As with many AI systems, our news platform strives for perfection
-              and accuracy, but it is not error-free. Our AI-powered news
-              platform enables full transparency of our news production
-              processes while adhering to strict protocols. Daily News aims to
-              redefine modern journalism through cutting-edge artificial
-              intelligence by minimizing errors and promoting open news
-              reporting.
+              Daily News is an AI-driven online news website built to keep you 
+              informed about local, national, and global events and affairs around 
+              you. We employ an artificial intelligence (AI) system that is custom-designed 
+              and trained for algorithmic news curation and AI-generated content. 
+              Our AI-powered platform enables complete transparency of our news 
+              production processes and aims to redefine modern journalism by combining 
+              cutting-edge artificial intelligence with a steadfast commitment to reliable and open news reporting.
             </p>
           </div>
 
