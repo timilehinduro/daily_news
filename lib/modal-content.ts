@@ -1,6 +1,7 @@
 interface ModalContent {
   brief: string;
   image: string;
+  figure: string;
   text: string;
 }
 
@@ -18,6 +19,7 @@ export const welcomeModalContent: ModalContent = {
   intervention at the selection stage. The AI system assists in generating news content, 
   drafting headlines, editing, tagging metadata, optimizing search visibility,  
   and distributing news stories.`,  
+  figure: '/AI_Gatekeeping_Journal_Minimal.png',
 };
 
 export default welcomeModalContent;
