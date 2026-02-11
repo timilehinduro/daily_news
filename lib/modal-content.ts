@@ -1,7 +1,7 @@
 interface ModalContent {
   brief: string;
   image: string;
-  text: string;
+  text: string;// HTML string
 }
 
 export const welcomeModalContent: ModalContent = {
