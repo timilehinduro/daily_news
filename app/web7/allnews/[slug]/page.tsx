@@ -9,12 +9,12 @@ import Modal from '@/components/ui/modal';
 import { MessageCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, use } from 'react';
 
 interface Article {
   id: number;
   published_content: number;
-  generated_content_id: number;
+  generated_content_id: number;  // ✅ NEW: The actual GeneratedContent ID for evidence
   title: string;
   content: string;
   author: string;
@@ -54,9 +54,10 @@ interface EvidenceResponse {
 export default function ArticlePage({ 
   params 
 }: { 
-  params: { slug: string } 
+  params: Promise<{ slug: string }> 
 }) {
-  const slug = params.slug;
+  const unwrappedParams = use(params);
+  const slug = unwrappedParams.slug;
 
   const [article, setArticle] = useState<Article | null>(null);
   const [showComments, setShowComments] = useState(false);
@@ -117,6 +118,7 @@ export default function ArticlePage({
       try {
         setEvidenceLoading(true);
 
+        // ✅ BEST SOLUTION: Use generated_content_id if available, fallback to published_content
         const evidenceId = article.generated_content_id || article.published_content;
         
         if (!evidenceId) {
@@ -196,7 +198,7 @@ export default function ArticlePage({
           <div className="text-center py-12">
             <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
             <p className="text-muted-foreground mb-6">
-              The article you&apos;re looking for doesn&apos;t exist.
+              The article you're looking for doesn't exist.
             </p>
             <Link href="/web7/allnews" className="text-primary hover:underline">
               ← Back to News
@@ -219,7 +221,7 @@ export default function ArticlePage({
 
             <div className="bg-muted p-4 rounded-lg">
               <p className="font-semibold">Source: {evidence.source}</p>
-              
+
               <a
                 href={evidence.url}
                 target="_blank"
@@ -235,6 +237,7 @@ export default function ArticlePage({
               <p className="text-muted-foreground">{evidence.summary}</p>
             </div>
 
+            {/* Display Details */}
             {evidence.details && evidence.details.length > 0 && (
               <div>
                 <p className="font-semibold mb-2">Analysis Details:</p>
@@ -255,7 +258,9 @@ export default function ArticlePage({
                       </div>
                       <div>
                         <p className="font-medium text-sm">Source Identification:</p>
-                        <p className="text-sm text-muted-foreground">{detail.source_identification}</p>
+                        <p className="text-sm text-muted-foreground">
+                          {detail.source_identification}
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -263,17 +268,23 @@ export default function ArticlePage({
               </div>
             )}
 
+            {/* What's Accurate */}
             {evidence["what's_accurate"] && (
               <div>
-                <p className="font-semibold mb-2">What&apos;s Accurate:</p>
-                <p className="text-muted-foreground">{evidence["what's_accurate"]}</p>
+                <p className="font-semibold mb-2">What's Accurate:</p>
+                <p className="text-muted-foreground">
+                  {evidence["what's_accurate"]}
+                </p>
               </div>
             )}
 
+            {/* What's Not */}
             {evidence["what's_not"] && (
               <div>
-                <p className="font-semibold mb-2">What&apos;s Not:</p>
-                <p className="text-muted-foreground">{evidence["what's_not"]}</p>
+                <p className="font-semibold mb-2">What's Not:</p>
+                <p className="text-muted-foreground">
+                  {evidence["what's_not"]}
+                </p>
               </div>
             )}
 
@@ -281,41 +292,44 @@ export default function ArticlePage({
               <p className="font-semibold mb-2">Verification Status:</p>
               <span
                 className={`inline-block px-3 py-1 rounded-full text-sm ${
-                  evidence.verification_status === 'True'
-                    ? 'bg-green-100 text-green-800'
-                    : evidence.verification_status === 'Partially True'
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-red-100 text-red-800'
+                  evidence.verification_status === "True"
+                    ? "bg-green-100 text-green-800"
+                    : evidence.verification_status === "Partially True"
+                    ? "bg-yellow-100 text-yellow-800"
+                    : "bg-red-100 text-red-800"
                 }`}
               >
                 {evidence.verification_status}
               </span>
             </div>
 
-            {evidence.supporting_documents && evidence.supporting_documents.length > 0 && (
-              <div>
-                <p className="font-semibold mb-2">Supporting Documents:</p>
-                <ul className="space-y-2">
-                  {evidence.supporting_documents.map((doc, index) => (
-                    <li key={index}>
-                      <a
-                        href={doc.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline"
-                      >
-                        {doc.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
+            {evidence.supporting_documents &&
+              evidence.supporting_documents.length > 0 && (
+                <div>
+                  <p className="font-semibold mb-2">Supporting Documents:</p>
+                  <ul className="space-y-2">
+                    {evidence.supporting_documents.map((doc, index) => (
+                      <li key={index}>
+                        <a
+                          href={doc.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-primary hover:underline"
+                        >
+                          {doc.title}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
           </div>
+
           <div className="mt-6">
             <Button onClick={() => setIsModalOpen(false)}>Close</Button>
           </div>
         </Modal>
+
       )}
 
       <main className="flex-1 container mx-auto px-4 py-8">
