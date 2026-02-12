@@ -9,12 +9,12 @@ import Modal from '@/components/ui/modal';
 import { MessageCircle } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState, use } from 'react';
+import { useEffect, useState } from 'react';
 
 interface Article {
   id: number;
   published_content: number;
-  generated_content_id: number;  // ✅ NEW: The actual GeneratedContent ID for evidence
+  generated_content_id: number;
   title: string;
   content: string;
   author: string;
@@ -54,10 +54,9 @@ interface EvidenceResponse {
 export default function ArticlePage({ 
   params 
 }: { 
-  params: Promise<{ slug: string }> 
+  params: { slug: string } 
 }) {
-  const unwrappedParams = use(params);
-  const slug = unwrappedParams.slug;
+  const slug = params.slug;
 
   const [article, setArticle] = useState<Article | null>(null);
   const [showComments, setShowComments] = useState(false);
@@ -118,7 +117,6 @@ export default function ArticlePage({
       try {
         setEvidenceLoading(true);
 
-        // ✅ BEST SOLUTION: Use generated_content_id if available, fallback to published_content
         const evidenceId = article.generated_content_id || article.published_content;
         
         if (!evidenceId) {
@@ -198,7 +196,7 @@ export default function ArticlePage({
           <div className="text-center py-12">
             <h1 className="text-2xl font-bold mb-4">Article Not Found</h1>
             <p className="text-muted-foreground mb-6">
-              The article you're looking for doesn't exist.
+              The article you&apos;re looking for doesn&apos;t exist.
             </p>
             <Link href="/web7/allnews" className="text-primary hover:underline">
               ← Back to News
@@ -221,6 +219,7 @@ export default function ArticlePage({
 
             <div className="bg-muted p-4 rounded-lg">
               <p className="font-semibold">Source: {evidence.source}</p>
+              
               <a
                 href={evidence.url}
                 target="_blank"
@@ -235,6 +234,48 @@ export default function ArticlePage({
               <p className="font-semibold mb-2">Summary:</p>
               <p className="text-muted-foreground">{evidence.summary}</p>
             </div>
+
+            {evidence.details && evidence.details.length > 0 && (
+              <div>
+                <p className="font-semibold mb-2">Analysis Details:</p>
+                <div className="space-y-3 bg-muted p-4 rounded-lg">
+                  {evidence.details.map((detail, index) => (
+                    <div key={index} className="space-y-2">
+                      <div>
+                        <p className="font-medium text-sm">Clarity:</p>
+                        <p className="text-sm text-muted-foreground">{detail.clarity}</p>
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">Accuracy:</p>
+                        <p className="text-sm text-muted-foreground">{detail.accuracy}</p>
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">Disclosure:</p>
+                        <p className="text-sm text-muted-foreground">{detail.disclosure}</p>
+                      </div>
+                      <div>
+                        <p className="font-medium text-sm">Source Identification:</p>
+                        <p className="text-sm text-muted-foreground">{detail.source_identification}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {evidence["what's_accurate"] && (
+              <div>
+                <p className="font-semibold mb-2">What&apos;s Accurate:</p>
+                <p className="text-muted-foreground">{evidence["what's_accurate"]}</p>
+              </div>
+            )}
+
+            {evidence["what's_not"] && (
+              <div>
+                <p className="font-semibold mb-2">What&apos;s Not:</p>
+                <p className="text-muted-foreground">{evidence["what's_not"]}</p>
+              </div>
+            )}
 
             <div>
               <p className="font-semibold mb-2">Verification Status:</p>
