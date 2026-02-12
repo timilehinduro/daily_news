@@ -30,7 +30,15 @@ interface Evidence {
   url: string;
   source: string;
   summary: string;
+  details: Array<{ 
+    clarity: string; 
+    accuracy: string;
+    disclosure: string;
+    source_identification: string; 
+  }>;
   verification_status: string;
+  "what's_accurate": string;
+  "what's_not": string;
   supporting_documents: Array<{
     url: string;
     title: string;
