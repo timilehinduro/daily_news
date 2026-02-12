@@ -31,7 +31,16 @@ interface Evidence {
   url: string;
   source: string;
   summary: string;
+  details: Array<{ 
+    clarity: string; 
+    accuracy: string;
+    disclosure: string;
+    source_identification: string; 
+  }>;
   verification_status: string;
+  correctness_score: number;
+  "what's_accurate": string;
+  "what's_not": string;
   supporting_documents: Array<{
     url: string;
     title: string;
@@ -207,65 +216,168 @@ export default function ArticlePage({
 
       {mounted && evidence && (
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-          <div className="space-y-4">
-            <h2 className="text-xl font-bold mb-4">Article Evidence</h2>
+        <div className="space-y-4">
+          <h2 className="text-xl font-bold mb-4">Article Evidence</h2>
 
-            <div className="bg-muted p-4 rounded-lg">
-              <p className="font-semibold">Source: {evidence.source}</p>
-              <a
-                href={evidence.url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-primary hover:underline"
-              >
-                View Original Source
-              </a>
-            </div>
+          <div className="bg-muted p-4 rounded-lg">
+            <p className="font-semibold">Source: {evidence.source}</p>
 
+            <a
+              href={evidence.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary hover:underline"
+            >
+              View Original Source
+            </a>
+          </div>
+
+          <div>
+            <p className="font-semibold mb-2">Summary:</p>
+            <p className="text-muted-foreground">{evidence.summary}</p>
+          </div>
+
+          {/* Display Details */}
+          {evidence.details && evidence.details.length > 0 && (
             <div>
-              <p className="font-semibold mb-2">Summary:</p>
-              <p className="text-muted-foreground">{evidence.summary}</p>
-            </div>
-
-            <div>
-              <p className="font-semibold mb-2">Verification Status:</p>
-              <span
-                className={`inline-block px-3 py-1 rounded-full text-sm ${
-                  evidence.verification_status === 'True'
-                    ? 'bg-green-100 text-green-800'
-                    : evidence.verification_status === 'Partially True'
-                    ? 'bg-yellow-100 text-yellow-800'
-                    : 'bg-red-100 text-red-800'
-                }`}
-              >
-                {evidence.verification_status}
-              </span>
-            </div>
-
-            {evidence.supporting_documents && evidence.supporting_documents.length > 0 && (
-              <div>
-                <p className="font-semibold mb-2">Supporting Documents:</p>
-                <ul className="space-y-2">
-                  {evidence.supporting_documents.map((doc, index) => (
-                    <li key={index}>
-                      <a
-                        href={doc.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline"
-                      >
-                        {doc.title}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
+              <p className="font-semibold mb-2">Analysis Details:</p>
+              <div className="space-y-3 bg-muted p-4 rounded-lg">
+                {evidence.details.map((detail, index) => (
+                  <div key={index} className="space-y-2">
+                    <div>
+                      <p className="font-medium text-sm">Clarity:</p>
+                      <p className="text-sm text-muted-foreground">{detail.clarity}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">Accuracy:</p>
+                      <p className="text-sm text-muted-foreground">{detail.accuracy}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">Disclosure:</p>
+                      <p className="text-sm text-muted-foreground">{detail.disclosure}</p>
+                    </div>
+                    <div>
+                      <p className="font-medium text-sm">Source Identification:</p>
+                      <p className="text-sm text-muted-foreground">{detail.source_identification}</p>
+                    </div>
+                  </div>
+                ))}
               </div>
-            )}
+            </div>
+          )}
+
+          {/* What's Accurate */}
+          {evidence["what's_accurate"] && (
+            <div>
+              <p className="font-semibold mb-2">What's Accurate:</p>
+              <p className="text-muted-foreground">{evidence["what's_accurate"]}</p>
+            </div>
+          )}
+
+          {/* What's Not */}
+          {evidence["what's_not"] && (
+            <div>
+              <p className="font-semibold mb-2">What's Not:</p>
+              <p className="text-muted-foreground">{evidence["what's_not"]}</p>
+            </div>
+          )}
+
+          <div>
+            <p className="font-semibold mb-2">Verification Status:</p>
+            <span
+              className={`inline-block px-3 py-1 rounded-full text-sm ${
+                evidence.verification_status === "True"
+                  ? "bg-green-100 text-green-800"
+                  : evidence.verification_status === "Partially True"
+                  ? "bg-yellow-100 text-yellow-800"
+                  : "bg-red-100 text-red-800"
+              }`}
+            >
+              {evidence.verification_status}
+            </span>
           </div>
-          <div className="mt-6">
-            <Button onClick={() => setIsModalOpen(false)}>Close</Button>
+
+          {/* ✅ NEW: Correctness Score (after Verification Status) */}
+          <div>
+            <p className="font-semibold mb-2">Correctness Score:</p>
+
+            <div className="flex items-baseline justify-between">
+              <div className="flex items-baseline gap-3">
+                <span className="text-4xl font-bold leading-none">
+                  {evidence.correctness_score ?? 0}
+                </span>
+                <span className="text-sm text-muted-foreground">/ 10</span>
+              </div>
+              <div className="text-sm text-muted-foreground">
+                {Math.round(((evidence.correctness_score ?? 0) / 10) * 100)}%
+              </div>
+            </div>
+
+            <div className="mt-3">
+              {/* Progress bar container */}
+              <div className="w-full h-3 bg-gray-200 rounded-full overflow-hidden">
+                <div
+                  role="progressbar"
+                  aria-valuenow={evidence.correctness_score ?? 0}
+                  aria-valuemin={0}
+                  aria-valuemax={10}
+                  className={`h-full transition-all duration-500 ${
+                    (evidence.correctness_score ?? 0) >= 7
+                      ? "bg-green-500"
+                      : (evidence.correctness_score ?? 0) >= 4
+                      ? "bg-yellow-400"
+                      : "bg-red-500"
+                  }`}
+                  style={{
+                    width: `${Math.max(0, Math.min(10, evidence.correctness_score ?? 0)) * 10}%`,
+                  }}
+                />
+              </div>
+
+              {/* Legend (optional) */}
+              <div className="flex items-center gap-4 text-xs text-muted-foreground mt-2">
+                <div className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-sm bg-green-500 inline-block" />
+                  <span>7–10 (High)</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-sm bg-yellow-400 inline-block" />
+                  <span>4–6 (Medium)</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className="w-3 h-3 rounded-sm bg-red-500 inline-block" />
+                  <span>0–3 (Low)</span>
+                </div>
+              </div>
+            </div>
           </div>
-        </Modal>
+
+          {evidence.supporting_documents && evidence.supporting_documents.length > 0 && (
+            <div>
+              <p className="font-semibold mb-2">Supporting Documents:</p>
+              <ul className="space-y-2">
+                {evidence.supporting_documents.map((doc, index) => (
+                  <li key={index}>
+                    <a
+                      href={doc.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-primary hover:underline"
+                    >
+                      {doc.title}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+
+        <div className="mt-6">
+          <Button onClick={() => setIsModalOpen(false)}>Close</Button>
+        </div>
+      </Modal>
+
       )}
 
       <main className="flex-1 container mx-auto px-4 py-8">
